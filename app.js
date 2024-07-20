@@ -8,7 +8,6 @@ const connection = require("./contexts/AppContext");
 
 const multer = require("multer");
 const {v4: uuidv4} = require("uuid");
-const compare = require("./utils/comparevalues");
 
 const port = process.env.PORT || 3000;
 app.engine(
@@ -17,9 +16,7 @@ app.engine(
     layoutsDir: "views/layouts/",
     defaultLayout: "main",
     extname: "hbs",
-    helpers: {
-      compare: compare,
-    },
+   
   })
 );
 
@@ -41,6 +38,7 @@ const imageStorage = multer.diskStorage({
     cb(null, `${uuidv4()}-${file.originalname}`);
   },
 });
+
 
 app.use(multer({storage : imageStorage}).single("Image"));
 
