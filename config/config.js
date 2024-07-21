@@ -2,7 +2,7 @@ const config = {
   development: {
     username: "root",
     password: "",
-    database: "LiberiaDB",
+    database: "pedidosYaDb",
     host: "localhost",
     dialect: "mysql",
   },
