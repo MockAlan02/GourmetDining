@@ -12,6 +12,7 @@
   "license": "ISC",
   "description": "",
   "dependencies": {
+    "@sequelize/postgres": "^7.0.0-alpha.41",
     "express": "^4.19.2",
     "express-handlebars": "^7.1.3",
     "formidable": "^3.5.1",

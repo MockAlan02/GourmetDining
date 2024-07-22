@@ -4,6 +4,8 @@ const app = express();
 const { engine } = require("express-handlebars");
 const connection = require("./contexts/AppContext");
 
+//Routes
+const userRoutes = require("./routes/userRoutes");
 
 
 const multer = require("multer");
@@ -43,7 +45,8 @@ const imageStorage = multer.diskStorage({
 app.use(multer({storage : imageStorage}).single("Image"));
 
 
-
+//routes
+app.use("User",userRoutes);
 
 
 app.use((req, res, next) => {
