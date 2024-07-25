@@ -15,6 +15,10 @@ const OrderProduct = connection.define("OrderProduct", {
         type: sequelize.INTEGER,
         allowNull: false,
     },
+    quantity: {
+        type: sequelize.INTEGER,
+        allowNull: false,
+    },
     });
 
 module.exports = OrderProduct;

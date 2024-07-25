@@ -21,11 +21,11 @@ const Order = connection.define("Order", {
     },
     subtotal: {
         type: sequelize.DOUBLE,
-        allowNull: false,
+        allowNull: true,
     },
     total : {
         type: sequelize.DOUBLE,
-        allowNull: false,
+        allowNull: true,
     },
     dateHour: {
         type: sequelize.DATE,
@@ -33,11 +33,11 @@ const Order = connection.define("Order", {
     },
     status: {
         type: sequelize.STRING,
-        allowNull: false,
+        allowNull: true,
     },
     typeProcess : {
         type: sequelize.STRING,
-        allowNull: false,
+        allowNull: true,
     },
     });
 
