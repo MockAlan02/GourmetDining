@@ -345,6 +345,7 @@ async function getDirections(req, res) {
   }
 }
 
+//direccion
 async function createDirection(req, res) {
   const { name, address } = req.body;
   const response = await Direccion.create({
@@ -433,6 +434,7 @@ async function updateDirection(req, res) {
   req.flash("error", "Error updating address");
   res.redirect("/customer/directions");
 }
+
 
 async function getFavorites(req, res) {
   try {
