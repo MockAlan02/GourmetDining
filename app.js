@@ -3,13 +3,15 @@ const path = require("path");
 const app = express();
 const { engine } = require("express-handlebars");
 const connection = require("./contexts/AppContext");
+const flash = require("connect-flash");
+const session = require("express-session");
 
 //Routes
 const userRoutes = require("./routes/userRoutes");
-
+const authRoutes = require("./routes/authRoutes");  
 
 const multer = require("multer");
-const {v4: uuidv4} = require("uuid");
+const { v4: uuidv4 } = require("uuid");
 
 const port = process.env.PORT || 3000;
 app.engine(
@@ -18,13 +20,11 @@ app.engine(
     layoutsDir: "views/layouts/",
     defaultLayout: "main",
     extname: "hbs",
-   
   })
 );
 
 app.set("view engine", "hbs");
 app.set("views", "views");
-
 
 app.use(express.urlencoded({ extended: false }));
 
@@ -41,18 +41,29 @@ const imageStorage = multer.diskStorage({
   },
 });
 
+app.use(multer({ storage: imageStorage }).single("Image"));
 
-app.use(multer({storage : imageStorage}).single("Image"));
+app.use(
+  session({
+    secret: "secret",
+    resave: false,
+    saveUninitialized: false,
+  })
+); 
+app.use(flash());
 
+app.use((req, res, next) => {
+  res.locals.error = req.flash("error");
+  next();
+});
 
 //routes
-app.use("User",userRoutes);
-
+app.use("User", userRoutes);
+app.use(authRoutes);
 
 app.use((req, res, next) => {
   res.status(400).render("404");
 });
-
 
 connection
   .sync({ force: false })

@@ -1,20 +1,20 @@
 const connection = require("../contexts/AppContext");
 const sequelize = require("sequelize");
 
-const Favorite = connection.define("Favorite", {
+const CommerceType = connection.define("CommerceType", {
   id: {
     type: sequelize.INTEGER,
     primaryKey: true,
     autoIncrement: true,
   },
-  IdUser: {
-    type: sequelize.INTEGER,
+  name: {
+    type: sequelize.STRING,
     allowNull: false,
   },
-  IdCommerce: {
-    type: sequelize.INTEGER,
+  picture : {
+    type: sequelize.STRING,
     allowNull: false,
   },
 });
 
-module.exports = Favorite;
+module.exports = CommerceType;

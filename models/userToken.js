@@ -1,20 +1,28 @@
 const connection = require("../contexts/AppContext");
 const sequelize = require("sequelize");
 
-const Favorite = connection.define("Favorite", {
+const UserToken = connection.define("UserToken", {
   id: {
     type: sequelize.INTEGER,
     primaryKey: true,
     autoIncrement: true,
   },
-  IdUser: {
+  token: {
+    type: sequelize.STRING,
+    allowNull: false,
+  },
+  userId: {
     type: sequelize.INTEGER,
     allowNull: false,
   },
-  IdCommerce: {
-    type: sequelize.INTEGER,
+  purpose: {
+    type: sequelize.STRING,
+    allowNull: false,
+  },
+  expireAt: {
+    type: sequelize.DATE,
     allowNull: false,
   },
 });
 
-module.exports = Favorite;
+module.exports = UserToken;
