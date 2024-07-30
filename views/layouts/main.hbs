@@ -1,57 +1,67 @@
+<!DOCTYPE html>
 <html lang="en">
-  <head>
+
+<head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="stylesheet" href="../../public/css/style.css" />
-    <link
-      rel="stylesheet"
-      href="/boostrap/bootstrap-5.3.3-dist/css/bootstrap.min.css"
-    />
+    <link rel="shortcut icon" href="img/brand.png" type="image/x-icon">
+    <title>{{title}}</title>
+    <link rel="stylesheet" href="/boostrap/bootstrap-5.3.3-dist/css/bootstrap.min.css" />
+    <script src="https://code.jquery.com/jquery-3.7.1.js"
+        integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4=" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <link rel="stylesheet" href="/boostrap/bootstrap-5.3.3-dist/css/style.css" />
+</head>
 
-    <script
-      src="https://code.jquery.com/jquery-3.7.1.js"
-      integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4="
-      crossorigin="anonymous"
-    ></script>
-    <title>Main</title>
-  </head>
+<body>
 
-  <body>
-    <nav class="navbar navbar-expand-lg navbar-light bg-light">
-      <div class="container-fluid">
-        <a class="navbar-brand" href="/home">Main</a>
-        <button
-          class="navbar-toggler"
-          type="button"
-          data-bs-toggle="collapse"
-          data-bs-target="#navbarNav"
-          aria-controls="navbarNav"
-          aria-expanded="false"
-          aria-label="Toggle navigation"
-        >
-          <span class="navbar-toggler-icon"></span>
-        </button>
-        <div class="collapse navbar-collapse" id="navbarNav">
-          <ul class="navbar-nav">
-
-          </ul>
-        </div>
-      </div>
-    </nav>
-    {{#if error}}
-     <div class="alert alert-danger alert-dismissible fade show" role="alert">
-  <strong>Error</strong> {{error}}
-  <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-    <span aria-hidden="true">&times;</span>
-  </button>
-</div>
-    {{/if}}
-
-    <main class="container">
-      {{{body}}}
+    {{#ifEquals page ["login", "signup", "newPass"]}}
+    <main>
+        {{{body}}}
     </main>
-  </body>
+    {{else ifEquals page "customer"}}
+    <header>
+        {{> navbar/customerNav}}
+    </header>
+    <main>
+        {{{body}}}
+    </main>
+    {{> footer}}
+    {{else ifEquals page "commerce"}}
+    <header>
+        {{> navbar/commerceNav}}
+    </header>
+    <main>
+        {{{body}}}
+    </main>
+    {{> footer}}
+    {{else ifEquals page "delivery"}}
+    <header>
+        {{> navbar/deliveryNav}}
+    </header>
+    <main>
+        {{{body}}}
+    </main>
+    {{> footer}}
+    {{else}}
+    <main>
+        {{{body}}}
+    </main>
+    {{/ifEquals}}
+</body>
 
-  <script src="/boostrap/bootstrap-5.3.3-dist/js/bootstrap.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script src="/boostrap/bootstrap-5.3.3-dist/js/bootstrap.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script src="https://kit.fontawesome.com/a076d05399.js"></script>
+<script>
+    function scrollToTop() {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+</script>
+<script>
+    function goBack() {
+        window.history.back();
+    }
+</script>
+
 </html>

@@ -5,7 +5,10 @@ const { validationResult } = require("express-validator");
 const transporter = require("../services/sendEmail");
 const Token = require("../models/userToken");
 function getLogin(req, res) {
-  res.render("auth/login");
+  res.render("auth/login", {
+    title: 'Login - Gourmet Dinning',
+    page: 'login'
+  });
 }
 
 function postLogin(req, res) {
@@ -24,10 +27,10 @@ function postLogin(req, res) {
         req.flash("error", "User not found");
         res.redirect("/login");
       }
-      if(result.isVerified === false){
+      if (result.isVerified === false) {
         req.flash("error", "User not verified");
         return res.redirect("/login");
-        }
+      }
       const isMatch = bcrypt.compareSync(password, result.password);
       if (!isMatch) {
         req.flash("error", "Invalid credentials");
@@ -45,6 +48,7 @@ function postLogin(req, res) {
 
 function getRegister(req, res) {
   res.render("auth/register");
+  page: 'register'
 }
 
 async function emailActivation(email) {
@@ -86,7 +90,8 @@ async function emailActivation(email) {
 }
 //Reset password page
 async function getResetPassword(req, res) {
-  res.render("auth/resetPassword");
+  res.render("auth/newPass");
+  page: 'newPass'
 }
 //Reset password
 async function resetPassword(req, res) {
@@ -94,7 +99,7 @@ async function resetPassword(req, res) {
   const token = await Token.findOne({ where: { token: req.params.token } });
   if (!token) {
     req.flash("error", "Token not found");
-    return res.redirect("auth/resetPassword");
+    return res.redirect("auth/newPass");
   }
 
   if (token.expireAt < Date.now()) {
@@ -347,4 +352,5 @@ module.exports = {
   postRegisterCommerceCliente,
   logout,
   confirmation,
+  getResetPassword
 };

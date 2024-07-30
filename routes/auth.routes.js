@@ -3,17 +3,20 @@ const routes = express.Router();
 const {
   login,
   clientOrDelivery,
-  commerce,
+  commerce
 } = require("../validators/validators");
 
 const {
   getLogin,
   postLogin,
   getRegister,
+  getResetPassword,
   postRegisterClientOrDelivery,
   postRegisterCommerceCliente,
-} = require("../controllers/authController");
+} = require("../controllers/auth.controller");
 
+routes.get('/', getLogin);
+routes.get('/newPassword', getResetPassword);
 routes.post("/login", login, postLogin);
 routes.post("/registerCommerce", commerce, postRegisterCommerceCliente);
 routes.post("/registerclient", clientOrDelivery, postRegisterClientOrDelivery);
