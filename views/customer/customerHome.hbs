@@ -11,18 +11,17 @@
 <section class="container mt-5">
     <h2 class="mb-4">Discover our specialty options</h2>
     <div class="row">
-        {{!-- {{#each comercios}} --}}
+        {{#each commerceTypes}}
         <div class="col-md-4 mb-4">
             <a href="#" class="card-link">
-                <div class="card">
-                    {{!-- style="background-image: url('{{this.imagePath}}');" --}}
+                <div class="card" style="background-image: url('{{this.picture}}');">
                     <div class="card-body card-content">
-                        <p class="card-title "><strong>Fast Food {{this.name}}</strong></p>
+                        <p class="card-title "><strong>{{this.name}}</strong></p>
                         {{!-- quita este comentario y quita el fast food --}}
                     </div>
                 </div>
             </a>
         </div>
-        {{!-- {{/each}} --}}
+        {{/each}}
     </div>
 </section>

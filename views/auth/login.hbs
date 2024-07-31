@@ -2,9 +2,9 @@
     <div class="login-form-container">
         <img src="img/brand.png" alt="Profile Picture">
         <h1>Welcome back!</h1>
-        <form>
-            <input type="email" class="form-control" placeholder="Email or Username" required>
-            <input type="password" class="form-control" placeholder="Password" required>
+        <form method="post" action="/login/login">
+            <input type="email" class="form-control" placeholder="Email" name="email" required>
+            <input type="password" class="form-control" placeholder="Password" name="password" required>
             <div class="text-right">
                 <a class="forgot-password mb-4" href="/newPassword">Forgot your password?</a>
             </div>

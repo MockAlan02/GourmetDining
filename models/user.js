@@ -9,7 +9,7 @@ const User = connection.define("User", {
     },
     name: {
         type: sequelize.STRING,
-        allowNull: false,
+        allowNull: true,
     },
     lastName: {
         type: sequelize.STRING,
@@ -50,6 +50,11 @@ const User = connection.define("User", {
     commerceType : {
         type: sequelize.INTEGER,
         allowNull: true,
+    },
+    isActive : {
+        type: sequelize.BOOLEAN,
+        defaultValue: false,
+        allowNull: false,
     },
     });
 

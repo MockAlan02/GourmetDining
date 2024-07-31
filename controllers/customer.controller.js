@@ -15,12 +15,51 @@ module.exports = {
   async index(req, res) {
     let commerceTypes = await CommerceType.findAll();
     commerceTypes = commerceTypes.map((type) => type.dataValues);
-    res.render("customer/customerHome", { 
+    res.render("customer/customerHome", {
       commerceTypes,
-      title: 'Home - Gourmet Dinning',
-      page: 'customer'
+      title: "Home - Gourmet Dinning",
+      page: "customer",
     });
   },
+
+  async newaddress(req, res) {
+    res.render("customer/newAdress");
+  },
+
+  async createAddress(req, res) {
+    const { name, address } = req.body;
+    console.log(req.body);
+    if (req.session.user == null) {
+      req.flash("error", "You must be logged in to add an address");
+      return res.redirect("/login");
+    }
+    const response = await Direccion.create({
+      IdUser: req.session.user.id,
+      name,
+      address,
+    });
+
+    if (response) {
+      req.flash("success", "Address added successfully");
+      return res.redirect("/customer");
+    }
+
+    req.flash("error", "Error adding address");
+    res.redirect("/customer/form/adress");
+  },
+
+  async customeraddress (req, res) {
+    let address = await Direccion.findAll({
+      where: {
+        IdUser: req.session.user.id,
+      },
+    });
+    address = address.map((address) => address.dataValues);
+    res.render("customer/customerAdress", {
+      address,
+      title: "Address - Gourmet Dinning",
+      page: "customeraddress",
+    });},
 
   async restaurantsbyType(req, res) {
     let commerceTypes = await CommerceType.findAll();
@@ -40,8 +79,8 @@ module.exports = {
       commerceTypes,
       commerce,
       commerceCount: commerce.length,
-      title: 'Commerces - Gourmet Dinning',
-      page: 'restaurantsbyType'
+      title: "Commerces - Gourmet Dinning",
+      page: "restaurantsbyType",
     });
   },
 
@@ -64,7 +103,7 @@ module.exports = {
       commerceTypes,
       commerce,
       commerceCount,
-      title: 'Commerces - Gourmet Dinning'
+      title: "Commerces - Gourmet Dinning",
     });
   },
 

@@ -1,40 +1,35 @@
 <section class="container mt-5 mb-5">
-    <!-- Section Header -->
-    <section class="addresses-header">
-        <h1 class="h4 text-center flex-grow-1">My Addresses</h1>
-        <button class="btn">
-            <i class="fas fa-plus"></i> Address
-        </button>
-    </section>
+  <!-- Section Header -->
+  <section class="addresses-header">
+    <h1 class="h4 text-center flex-grow-1">My Addresses</h1>
+    <button class="btn">
+      <i class="fas fa-plus"></i>
+      Address
+    </button>
+  </section>
 
-    <!-- Address Cards -->
-    <div class="address-card">
+  <!-- Address Cards -->
+  <div class="address-card">
+    {{#if address}}
+      {{#each address}}
         <div class="address-item">
-            <div class="address-info">
-                <i class="fas fa-map-marker-alt"></i>
-                <div>
-                    <h4 class="h6">Home</h4>
-                    <p>1234 Main St, Springfield, IL</p>
-                </div>
-            </div>
+          <div class="address-info">
+            <i class="fas fa-map-marker-alt"></i>
             <div>
-                <button class="btn btn-secondary">Edit</button>
-                <button class="btn btn-danger">Delete</button>
+              <h4 class="h6">{{this.name}}</h4>
+              <p>{{this.address}}</p>
             </div>
+          </div>
+          <div>
+            <button class="btn btn-secondary">Edit</button>
+            <button class="btn btn-danger">Delete</button>
+          </div>
         </div>
-        <hr>
-        <div class="address-item">
-            <div class="address-info">
-                <i class="fas fa-map-marker-alt"></i>
-                <div>
-                    <h4 class="h6">Work</h4>
-                    <p>5678 Elm St, Springfield, IL</p>
-                </div>
-            </div>
-            <div>
-                <button class="btn btn-secondary">Edit</button>
-                <button class="btn btn-danger">Delete</button>
-            </div>
-        </div>
-    </div>
+        <hr />
+      {{/each}}
+    {{else}}
+      <h1 class="h4 text-center">Empty Address</h1>
+    {{/if}}
+
+  </div>
 </section>

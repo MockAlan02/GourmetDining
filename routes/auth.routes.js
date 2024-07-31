@@ -14,9 +14,11 @@ const {
   getRegisterCommerce,
   postRegisterClientOrDelivery,
   postRegisterCommerceCliente,
+  getactivationpage
 } = require("../controllers/auth.controller");
 
 routes.get('/', getLogin);
+routes.get("/confirmation/:token", getactivationpage);
 routes.get('/newPassword', getResetPassword);
 routes.post("/login", login, postLogin);
 routes.post("/registerCommerce", commerce, postRegisterCommerceCliente);
