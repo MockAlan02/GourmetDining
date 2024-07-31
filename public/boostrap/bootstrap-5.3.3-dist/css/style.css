@@ -872,8 +872,8 @@ h3 {
     flex-direction: column;
     padding: 20px;
 
-    form{
-        .btn-pill{
+    form {
+        .btn-pill {
             width: 100%;
         }
     }
@@ -905,8 +905,8 @@ h3 {
     text-decoration: none;
 }
 
-.registration-buttons{
-    .btn-pill{
+.registration-buttons {
+    .btn-pill {
         border: var(--color-gray);
         background-color: var(--color-gray);
         color: white;
@@ -915,11 +915,12 @@ h3 {
             background-color: #333333;
         }
     }
-    .btn__commerce-register{
+
+    .btn__commerce-register {
         background-color: transparent;
         color: black;
 
-        &:hover{
+        &:hover {
             color: white;
             background-color: var(--color-gray);
         }
@@ -943,22 +944,143 @@ h3 {
     max-width: 400px;
     margin: 50px auto;
     text-align: center;
+
+    img {
+        max-width: 60px;
+        height: auto;
+        object-fit: cover;
+    }
+
 }
+
 .forgot-password-container {
     padding: 20px;
-    border: 1px solid #ddd;
     border-radius: 10px;
+    background-color: white;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.034);
 }
+
 .forgot-password-container h1 {
     margin-bottom: 15px;
 }
+
 .forgot-password-container p {
     margin-bottom: 20px;
     color: #666;
 }
+
 .forgot-password-container input {
     margin-bottom: 15px;
 }
+
 .forgot-password-container button {
     width: 100%;
+    background-color: var(--color-primary);
+    border: none;
+
+    &:hover {
+        background-color: #b3030e;
+    }
+}
+
+.reset-password-section {
+    max-width: 400px;
+    margin: 50px auto;
+    text-align: center;
+
+    img {
+        max-width: 60px;
+        height: auto;
+        object-fit: cover;
+    }
+}
+
+.reset-password-container {
+    padding: 20px;
+    background-color: white;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.034);
+    border-radius: 10px;
+}
+
+.reset-password-container h1 {
+    margin-bottom: 15px;
+}
+
+.reset-password-container input {
+    margin-bottom: 15px;
+}
+
+.reset-password-container button {
+    width: 100%;
+    background-color: var(--color-primary);
+    border: none;
+
+    &:hover {
+        background-color: #b3030e;
+    }
+}
+
+/* REGISTER USER */
+.register-section {
+    max-width: 700px;
+    margin: 50px auto;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    background-color: #fff;
+
+    .form__start {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+
+        a {
+            text-decoration: none;
+        }
+    }
+
+    button {
+        background-color: var(--color-primary);
+        border: none;
+        color: white;
+        font-weight: 600;
+        transition: all .3s ease-in-out;
+
+        &:hover {
+            background-color: #b3030e;
+            color: white;
+        }
+    }
+}
+
+.register-section h1 {
+    margin-bottom: 20px;
+}
+
+.register-section .legend {
+    margin-top: 20px;
+    font-weight: bold;
+}
+
+.form__start__commerce {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    a {
+        text-decoration: none;
+    }
+}
+
+.btn__commerce__register {
+    background-color: var(--color-primary);
+    border: none;
+    color: white;
+    font-weight: 600;
+    transition: all .3s ease-in-out;
+
+    &:hover {
+        background-color: #b3030e;
+        color: white;
+    }
 }

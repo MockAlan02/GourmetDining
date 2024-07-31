@@ -47,8 +47,16 @@ function postLogin(req, res) {
 }
 
 function getRegister(req, res) {
-  res.render("auth/register");
-  page: 'register'
+  res.render("auth/registerCustumerDelivery"), {
+    title: 'Register - Gourmet Dinning',
+    page: 'register'
+  }
+}
+function getRegisterCommerce(req, res) {
+  res.render("auth/registerCommerce"), {
+    title: 'Register - Gourmet Dinning',
+    page: 'register'
+  }
 }
 
 async function emailActivation(email) {
@@ -90,8 +98,11 @@ async function emailActivation(email) {
 }
 //Reset password page
 async function getResetPassword(req, res) {
-  res.render("auth/newPass");
-  page: 'newPass'
+  res.render("auth/newPass"), {
+    page: 'newPass',
+    title: 'Reset Password - Gourmet Dinning'
+  }
+
 }
 //Reset password
 async function resetPassword(req, res) {
@@ -348,6 +359,7 @@ module.exports = {
   getLogin,
   postLogin,
   getRegister,
+  getRegisterCommerce,
   postRegisterClientOrDelivery,
   postRegisterCommerceCliente,
   logout,

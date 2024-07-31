@@ -1,0 +1,89 @@
+<section class="container mt-5 mb-3">
+    <section class="p-4 rounded shadow" style="background-color: white;">
+        <div class="form__start__commerce">
+            <h1 class="">Register Your Business</h1>
+            <a href="javascript:history.back()" class="btn btn-link">
+                <i class="fas fa-arrow-left"></i> Back
+            </a>
+        </div>
+        <form id="businessRegistrationForm">
+            <legend class="mt-4">Business Details</legend>
+            <div class="row">
+                <div class="col-md-6 mb-3">
+                    <label for="businessName" class="form-label">Business Name</label>
+                    <input type="text" class="form-control" id="businessName" required>
+                </div>
+                <div class="col-md-6 mb-3">
+                    <label for="businessPhone" class="form-label">Phone</label>
+                    <input type="tel" class="form-control" id="businessPhone" required>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-6 mb-3">
+                    <label for="businessEmail" class="form-label">Email</label>
+                    <input type="email" class="form-control" id="businessEmail" required>
+                </div>
+                <div class="col-md-6 mb-3">
+                    <label for="businessLogo" class="form-label">Logo</label>
+                    <input type="file" class="form-control" id="businessLogo" required>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-6 mb-3">
+                    <label for="openingHours" class="form-label">Opening Hours</label>
+                    <input type="time" class="form-control" id="openingHours" required>
+                </div>
+                <div class="col-md-6 mb-3">
+                    <label for="closingHours" class="form-label">Closing Hours</label>
+                    <input type="time" class="form-control" id="closingHours" required>
+                </div>
+            </div>
+            <div class="mb-3">
+                <label for="businessType" class="form-label">Business Type</label>
+                <select id="businessType" class="form-select" required>
+                    <option value="">Select Business Type</option>
+                    <option value="retail">Retail</option>
+                    <option value="restaurant">Restaurant</option>
+                    <option value="service">Service</option>
+                    <option value="other">Other</option>
+                </select>
+            </div>
+
+            <legend class="mt-4">Account Details</legend>
+            <div class="row">
+                <div class="col-md-6 mb-3">
+                    <label for="username" class="form-label">Username</label>
+                    <input type="text" class="form-control" id="username" required>
+                </div>
+                <div class="col-md-6 mb-3">
+                    <label for="password" class="form-label">Password</label>
+                    <input type="password" class="form-control" id="password" required>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-6 mb-3">
+                    <label for="confirmPassword" class="form-label">Confirm Password</label>
+                    <input type="password" class="form-control" id="confirmPassword" required>
+                </div>
+            </div>
+            <button type="submit" class="btn w-100 btn__commerce__register">Register</button>
+        </form>
+    </section>
+</section>
+<div class="modal fade" id="passwordMismatchModal" tabindex="-1" aria-labelledby="passwordMismatchModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="passwordMismatchModalLabel">Password Mismatch</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                The passwords do not match. Please try again.
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
