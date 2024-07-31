@@ -2,10 +2,10 @@
   <!-- Section Header -->
   <section class="addresses-header">
     <h1 class="h4 text-center flex-grow-1">My Addresses</h1>
-    <button class="btn">
+    <a href="form/adress" class="btn">
       <i class="fas fa-plus"></i>
       Address
-    </button>
+    </a>
   </section>
 
   <!-- Address Cards -->
@@ -22,7 +22,9 @@
           </div>
           <div>
             <button class="btn btn-secondary">Edit</button>
-            <button class="btn btn-danger">Delete</button>
+            <form method="post" action="/customer/delete/address/{{this.id}}">
+              <button class="btn btn-danger">Delete</button>
+            </form>
           </div>
         </div>
         <hr />

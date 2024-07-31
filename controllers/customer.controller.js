@@ -41,14 +41,14 @@ module.exports = {
 
     if (response) {
       req.flash("success", "Address added successfully");
-      return res.redirect("/customer");
+      return res.redirect("/customer/address");
     }
 
     req.flash("error", "Error adding address");
     res.redirect("/customer/form/adress");
   },
 
-  async customeraddress (req, res) {
+  async customeraddress(req, res) {
     let address = await Direccion.findAll({
       where: {
         IdUser: req.session.user.id,
@@ -59,8 +59,23 @@ module.exports = {
       address,
       title: "Address - Gourmet Dinning",
       page: "customeraddress",
-    });},
+    });
+  },
 
+  async deleteAddress(req, res) {
+    const { id } = req.params;
+    const response = await Direccion.destroy({
+      where: {
+        id: id,
+      },
+    });
+    req.flash(
+      response
+        ? ("success", "Address deleted successfully")
+        : ("error", "Error deleting address")
+    );
+    res.redirect("/customer/address");
+  },
   async restaurantsbyType(req, res) {
     let commerceTypes = await CommerceType.findAll();
     commerceTypes = commerceTypes.map((type) => type.dataValues);

@@ -38,7 +38,17 @@ function postLogin(req, res) {
       }
       req.session.user = result;
       console.log(req.session.user);
-      res.redirect("/");
+      req.flash("success", "Welcome");
+      const roleRoutes = {
+        admin: "/admin",
+        user: "/customer",
+        delivery: "/delivery",
+      };
+      if (roleRoutes[result.role]) {
+        return res.redirect(roleRoutes[result.role]);
+      } else {
+        return res.status(400).send("Role not found");
+      }
     })
     .catch((err) => {
       console.log(err);
@@ -109,9 +119,37 @@ async function getResetPassword(req, res) {
       title: "Reset Password - Gourmet Dinning",
     };
 }
+
+async function resetPasswordToken(req, res) {
+  const { email } = req.body;
+  console.log(email);
+  await emailResetPassword(email, req);
+  res.redirect("/login");
+}
+
+//Reset password page
+async function getnewPassword(req, res) {
+  console.log(req.params.token);
+  const token = await Token.findOne({ where: { token: req.params.token } });
+  if (!token) {
+    req.flash("error", "Token not found");
+    return res.redirect("auth/newPass");
+  }
+  if(token.expireAt < Date.now()){
+    req.flash("error", "Token expired");
+    return res.redirect("auth/newPass");
+  }
+  res.render("auth/confirmNewPass", {
+    title: "Reset Password - Gourmet Dinning",
+    token: req.params.token,
+  });
+}
+
 //Reset password
 async function resetPassword(req, res) {
   const { password, confirmPassword } = req.body;
+  console.log(password);
+  console.log(req.params.token);
   const token = await Token.findOne({ where: { token: req.params.token } });
   if (!token) {
     req.flash("error", "Token not found");
@@ -135,32 +173,46 @@ async function resetPassword(req, res) {
   }
   const hashedPassword = bcrypt.hashSync(password, 12);
   user.password = hashedPassword;
-  user.save();
-  token.remove();
+  await user.save();
+  await token.destroy();
   req.flash("success", "Password updated");
   res.redirect("/login");
 }
+
 //Send email to reset password
-async function emailResetPassword(email) {
+async function emailResetPassword(email, req) {
   const user = await User.findOne({ where: { email } });
   if (!user) {
     req.flash("error", "User not found");
-    return res.redirect("/register");
+    res.render("auth/newPass"),
+    {
+      page: "newPass",
+      title: "Reset Password - Gourmet Dinning",
+    };
   }
   if (user.isVerified === false) {
     req.flash("error", "User not verified");
-    return res.redirect("/register");
+    res.render("auth/newPass"),
+    {
+      page: "newPass",
+      title: "Reset Password - Gourmet Dinning",
+    };
   }
 
   if (user.role === "admin") {
     req.flash("error", "Admin cannot reset password");
-    return res.redirect("/register");
+    res.render("auth/newPass"),
+    {
+      page: "newPass",
+      title: "Reset Password - Gourmet Dinning",
+    };
   }
 
   const token = new Token({
     userId: user.id,
     token: crypto.randomBytes(16).toString("hex"),
     purpose: "resetPassword",
+    expireAt: Date.now() + 3600000,
   });
   token.save();
 
@@ -209,7 +261,7 @@ async function confirmation(req, res) {
   user.save();
   token.remove();
   req.flash("success", "Account verified");
-  res.redirect("/login");
+  res.render("auth/mailActivation");
 }
 
 //Register For client or delivery
@@ -368,12 +420,12 @@ async function getactivationpage(req, res) {
   const token = await Token.findOne({ where: { token: tokenconfirmation } });
   if (!token) {
     req.flash("error", "Token not found");
-    return res.render("auth/mailActivationError")
+    return res.render("auth/mailActivationError");
   }
-  const user  = await User.findOne({ where: { id: token.userId } });
+  const user = await User.findOne({ where: { id: token.userId } });
   if (!user) {
     req.flash("error", "User not found");
-    return res.render("auth/mailActivationError")
+    return res.render("auth/mailActivationError");
   }
   user.isActive = true;
   await user.save();
@@ -382,7 +434,6 @@ async function getactivationpage(req, res) {
   res.render("auth/activationpage", {
     title: "Activation - Gourmet Dinning",
   });
-
 }
 
 module.exports = {
@@ -395,5 +446,8 @@ module.exports = {
   logout,
   confirmation,
   getResetPassword,
-  getactivationpage
+  getactivationpage,
+  resetPasswordToken,
+  getnewPassword,
+  resetPassword
 };

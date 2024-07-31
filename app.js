@@ -9,14 +9,13 @@ const flash = require("connect-flash");
 const session = require("express-session");
 const multer = require("multer");
 const { v4: uuidv4 } = require("uuid");
-
+const Authentication = require("./middlewares/is-auth");
 
 const port = process.env.PORT || 3000;
 
+const hbs = require("handlebars");
 
-const hbs = require('handlebars');
-
-hbs.registerHelper('ifEquals', function(arg1, arg2, options) {
+hbs.registerHelper("ifEquals", function (arg1, arg2, options) {
   if (Array.isArray(arg2)) {
     if (arg2.includes(arg1)) {
       return options.fn(this);
@@ -28,7 +27,6 @@ hbs.registerHelper('ifEquals', function(arg1, arg2, options) {
   }
   return options.inverse(this);
 });
-
 
 app.engine(
   "hbs",
@@ -43,9 +41,9 @@ app.engine(
             return options.fn(this);
           }
         } else {
-          return (arg1 === arg2) ? options.fn(this) : options.inverse(this);
+          return arg1 === arg2 ? options.fn(this) : options.inverse(this);
         }
-      }
+      },
     },
     partialsDir: [
       path.join(__dirname, "views/partials/"),
@@ -54,7 +52,7 @@ app.engine(
       path.join(__dirname, "views/commerce/"),
       path.join(__dirname, "views/customer/"),
       path.join(__dirname, "views/delivery/"),
-      path.join(__dirname, "views/admin/")
+      path.join(__dirname, "views/admin/"),
     ],
   })
 );
@@ -107,9 +105,10 @@ app.use((req, res, next) => {
 const customerRoutes = require("./routes/customer.routes");
 const authRoutes = require("./routes/auth.routes");
 
-app.use("/customer", customerRoutes);
-app.use("/login", authRoutes);
 app.use("/", authRoutes);
+app.use("/login", authRoutes);
+//app.use(Authentication.isAuth);
+app.use("/customer",Authentication.authorizeRole("user"), customerRoutes);
 // app.use("/commerce", commerceRoutes);
 // app.use("/delivery", deliveryRoutes);
 // app.use("/admin", adminRoutes);
