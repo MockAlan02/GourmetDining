@@ -1,0 +1,122 @@
+<div class="container mt-4">
+    <h2>My Orders</h2>
+    {{#each orders}}
+    <div class="order-card card mb-3">
+        <div class="card-body">
+            <div class="d-flex justify-content-between">
+                <div>
+                    <h6 class="card-subtitle mb-2 text-muted">{{this.status}}</h6>
+                    <h5 class="card-title">{{this.commerceName}}</h5>
+                    <p class="card-text">RD$ {{this.total}} - {{this.products.length}} products</p>
+                    <small class="text-muted">{{formatDate this.createdAt}}</small>
+                </div>
+                <div>
+                    <img src="{{this.commerceImage}}" alt="{{this.commerceName}}" class="img-thumbnail">
+                </div>
+            </div>
+        </div>
+    </div>
+    {{/each}}
+
+    <!-- Sample Data -->
+    <div class="order-card card mb-3">
+        <div class="card-body">
+            <div class="d-flex justify-content-between">
+                <div>
+                    <h6 class="card-subtitle mb-2 text-muted">PENDING</h6>
+                    <h5 class="card-title">Pizca De Sal</h5>
+                    <p class="card-text">RD$925 - 3 products</p>
+                    <small class="text-muted">18 Jul - 3:07 AM</small>
+                </div>
+                <div>
+                    <img src="path/to/image.jpg" alt="Pizca De Sal" class="img-thumbnail">
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="order-card card mb-3">
+        <div class="card-body">
+            <div class="d-flex justify-content-between">
+                <div>
+                    <h6 class="card-subtitle mb-2 text-muted">IN PROCESS</h6>
+                    <h5 class="card-title">Pizca De Sal</h5>
+                    <p class="card-text">RD$1378.20 - 7 products</p>
+                    <small class="text-muted">17 Jul - 12:24 PM</small>
+                </div>
+                <div>
+                    <img src="path/to/image.jpg" alt="Pizca De Sal" class="img-thumbnail">
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="order-card card mb-3">
+        <div class="card-body">
+            <div class="d-flex justify-content-between">
+                <div>
+                    <h6 class="card-subtitle mb-2 text-muted">COMPLETED</h6>
+                    <h5 class="card-title">Pizca De Sal</h5>
+                    <p class="card-text">RD$1785 - 2 products</p>
+                    <small class="text-muted">14 Jul - 8:18 AM</small>
+                </div>
+                <div>
+                    <img src="path/to/image.jpg" alt="Pizca De Sal" class="img-thumbnail">
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<style>
+.order-card {
+    border-radius: 10px;
+    border: 1px solid #ddd;
+    padding: 20px; 
+    width: 100%;
+    max-width: 700px; 
+    margin: auto; 
+}
+
+.card-subtitle {
+    font-size: 0.9em;
+    font-weight: bold;
+    color: #AEB1C2;
+}
+
+.card-title {
+    margin-bottom: 0.5em;
+    font-size: 1.2em;
+}
+
+.card-text {
+    font-size: 1em;
+    margin: 0;
+}
+
+.text-muted {
+    font-size: 0.85em;
+    color: #888;
+}
+
+.img-thumbnail {
+    max-width: 50px;
+    border-radius: 50%;
+}
+
+.d-flex {
+    align-items: center;
+    justify-content: space-between;
+}
+
+.container {
+    max-width: 800px;
+    margin: auto;
+}
+
+h2 {
+    color: #333;
+    text-align: center;
+    margin-bottom: 1em;
+}
+
+</style>

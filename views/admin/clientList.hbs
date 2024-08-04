@@ -1,0 +1,41 @@
+<h1>Client List</h1>
+<table class="table">
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Last name</th>
+      <th>Orders placed</th>
+      <th>Phone number</th>
+      <th>Email</th>
+      <th>Actions</th>
+    </tr>
+  </thead>
+  <tbody>
+    {{#each clients}}
+    <tr>
+      <td>{{this.firstName}}</td>
+      <td>{{this.lastName}}</td>
+      <td>
+        {{#if this.orders.length}}
+          {{this.orders.length}}
+        {{else}}
+          0
+        {{/if}}
+      </td>
+      <td>{{this.phone}}</td>
+      <td>{{this.email}}</td>
+      <td>
+        {{#if this.isActive}}
+        <form action="/admin/clients/{{this.id}}/toggle" method="POST">
+          <button type="submit" class="btn btn-danger">Inactivate</button>
+        </form>
+        {{else}}
+        <form action="/admin/clients/{{this.id}}/toggle" method="POST">
+          <button type="submit" class="btn btn-success">Activate</button>
+        </form>
+        {{/if}}
+      </td>
+    </tr>
+    {{/each}}
+  </tbody>
+</table>

@@ -51,6 +51,14 @@
         {{{body}}}
     </main>
     {{> footer}}
+    {{else ifEquals page "admin"}}
+    <header>
+        {{> navbar/adminNav}}
+    </header>
+    <main>
+        {{{body}}}
+    </main>
+    {{> footer}}
     {{else}}
     <main>
         {{{body}}}
