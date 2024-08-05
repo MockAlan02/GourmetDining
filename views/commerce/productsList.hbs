@@ -1,0 +1,30 @@
+<h1>Products List</h1>
+<a href="/commerce/products/create" class="btn">Create New Product</a>
+<table>
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>Image</th>
+            <th>Description</th>
+            <th>Category</th>
+            <th>Price</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        {{#each products}}
+        <tr>
+            <td>{{this.name}}</td>
+            <td><img src="{{this.image}}" alt="{{this.name}}" width="100"></td>
+            <td>{{this.description}}</td>
+            <td>{{this.commerceType.name}}</td>
+            <td>${{this.price}}</td>
+            <td>
+                <a href="/commerce/products/edit/{{this.id}}" class="btn">Edit</a>
+                <a href="/commerce/products/delete/{{this.id}}" class="btn">Delete</a>
+            </td>
+        </tr>
+        {{/each}}
+    </tbody>
+</table>
+

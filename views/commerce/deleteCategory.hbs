@@ -1,0 +1,6 @@
+<h1>Delete category</h1>
+<p>Are you sure you want to delete "{{category.name}}"?</p>
+<form action="/categories/delete/{{category.id}}" method="POST">
+    <button type="submit" class="btn btn-danger">Acept</button>
+    <a href="/categories" class="btn btn-secondary">Cancel</a>
+</form>

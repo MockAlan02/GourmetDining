@@ -1,0 +1,37 @@
+<h1>Mantenimiento de Administradores</h1>
+<a href="/admin/admins/create" class="btn btn-primary">Crear Administrador</a>
+<table class="table">
+  <thead>
+    <tr>
+      <th>Nombre</th>
+      <th>Apellido</th>
+      <th>Nombre de Usuario</th>
+      <th>Cédula</th>
+      <th>Correo</th>
+      <th>Acciones</th>
+    </tr>
+  </thead>
+  <tbody>
+    {{#each admins}}
+    <tr>
+      <td>{{this.firstName}}</td>
+      <td>{{this.lastName}}</td>
+      <td>{{this.username}}</td>
+      <td>{{this.cedula}}</td>
+      <td>{{this.email}}</td>
+      <td>
+        {{#if this.isActive}}
+        <form action="/admin/admins/{{this.id}}/toggle" method="POST">
+          <button type="submit" class="btn btn-danger">Inactivar</button>
+        </form>
+        {{else}}
+        <form action="/admin/admins/{{this.id}}/toggle" method="POST">
+          <button type="submit" class="btn btn-success">Activar</button>
+        </form>
+        {{/if}}
+        <a href="/admin/admins/{{this.id}}/edit" class="btn btn-secondary">Editar</a>
+      </td>
+    </tr>
+    {{/each}}
+  </tbody>
+</table>

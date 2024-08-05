@@ -1,0 +1,9 @@
+<h1>Editar Configuración</h1>
+<form action="/admin/configuration/save" method="POST">
+  <div class="form-group">
+    <label for="itbis">ITBIS (%)</label>
+    <input type="number" class="form-control" id="itbis" name="itbis" value="{{config.itbis}}" required>
+  </div>
+  <button type="submit" class="btn btn-success">Guardar</button>
+  <a href="/admin/configuration" class="btn btn-secondary">Volver Atrás</a>
+</form>

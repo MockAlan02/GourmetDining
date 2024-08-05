@@ -105,14 +105,20 @@ app.use((req, res, next) => {
 const customerRoutes = require("./routes/customer.routes");
 const authRoutes = require("./routes/auth.routes");
 const deliveryRoutes = require("./routes/delivery.routes");
+const adminRoutes = require("./routes/admin.routes")
+const commerceRoutes = require("./routes/commerce.routes")
 
 app.use("/", authRoutes);
+
 app.use("/login", authRoutes);
 //app.use(Authentication.isAuth);
 app.use("/customer",Authentication.authorizeRole("user"), customerRoutes);
 // app.use("/commerce", commerceRoutes);
+
+app.use("/commerce", commerceRoutes);
+
 app.use("/delivery", deliveryRoutes);
-// app.use("/admin", adminRoutes);
+app.use("/admin", adminRoutes);
 
 // Manejo de errores 404
 app.use((req, res, next) => {
