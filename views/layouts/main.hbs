@@ -14,13 +14,13 @@
 </head>
 
 <body>
- {{#if error}}
-     <div class="alert alert-danger alert-dismissible fade show" role="alert">
-  <strong>Error</strong> {{error}}
-  <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-    <span aria-hidden="true">&times;</span>
-  </button>
-</div>
+    {{#if error}}
+    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+        <strong>Error</strong> {{error}}
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
     {{/if}}
 
     {{#ifEquals page ["login", "signup", "newPass", "registerCostumerDelivery"]}}
@@ -61,6 +61,7 @@
 <script src="/boostrap/bootstrap-5.3.3-dist/js/bootstrap.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script src="https://kit.fontawesome.com/a076d05399.js"></script>
+<script src="https://unpkg.com/@dotlottie/player-component@latest/dist/dotlottie-player.mjs" type="module"></script>
 <script>
     function scrollToTop() {
         window.scrollTo({ top: 0, behavior: 'smooth' });

@@ -377,7 +377,10 @@ h3 {
             background: white;
             font-weight: 600;
 
-            &:hover {
+            &:hover,
+            &:focus,
+            &:active,
+            &:focus:active {
                 background: var(--color-primary);
             }
         }
@@ -747,7 +750,11 @@ h3 {
     align-items: center;
     margin-bottom: 20px;
 
-    button {
+    h1{
+        text-align: center;
+    }
+
+    a {
         background-color: var(--color-primary);
         font-weight: 600;
         color: white;
@@ -757,10 +764,14 @@ h3 {
             font-size: 14px;
         }
 
-        &:hover {
+        &:hover,
+        &:focus,
+        &:active,
+        &:focus:active {
             background-color: #b3030e;
             color: white;
         }
+
     }
 }
 
@@ -978,8 +989,12 @@ h3 {
     background-color: var(--color-primary);
     border: none;
 
-    &:hover {
+    &:hover,
+    &:focus,
+    &:active,
+    &:focus:active {
         background-color: #b3030e;
+        color: white;
     }
 }
 
@@ -1015,8 +1030,12 @@ h3 {
     background-color: var(--color-primary);
     border: none;
 
-    &:hover {
+    &:hover,
+    &:focus,
+    &:active,
+    &:focus:active {
         background-color: #b3030e;
+        color: white;
     }
 }
 
@@ -1046,7 +1065,10 @@ h3 {
         font-weight: 600;
         transition: all .3s ease-in-out;
 
-        &:hover {
+        &:hover,
+        &:focus,
+        &:active,
+        &:focus:active {
             background-color: #b3030e;
             color: white;
         }
@@ -1083,4 +1105,76 @@ h3 {
         background-color: #b3030e;
         color: white;
     }
+}
+
+/* ACTIVATION ACCOUNT */
+
+.activation-section {
+    height: 80dvh;
+    display: grid;
+    place-content: center;
+
+    .content__activation {
+        padding: 20px;
+        border-radius: 12px;
+        background-color: white;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        max-width: 400px;
+        text-align: center;
+    }
+
+}
+
+.activation-link {
+    margin-top: 15px;
+
+    background-color: var(--color-primary);
+    border: none;
+    color: white;
+    font-weight: 600;
+    transition: all .3s ease-in-out;
+
+    &:hover {
+        background-color: #b3030e;
+        color: white;
+    }
+}
+
+.icon__activation {
+    width: 90px;
+    height: 90px;
+    margin: 0 auto;
+}
+
+/* ERROR CONFIRMATION */
+.error-section {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    text-align: center;
+}
+
+.error-icon {
+    margin-bottom: 20px;
+}
+
+.error-link {
+    margin-top: 20px;
+}
+
+/* ORDER DELIVERY */
+.complete__btn{
+    background-color: var(--color-primary);
+    border: none;
+    color: white;
+    font-weight: 600;
+    transition: all .3s ease-in-out;
+
+    &:hover {
+        background-color: #b3030e;
+        color: white;
+    }
+    
 }
