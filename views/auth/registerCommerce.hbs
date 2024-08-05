@@ -6,64 +6,60 @@
                 <i class="fas fa-arrow-left"></i> Back
             </a>
         </div>
-        <form id="businessRegistrationForm">
+        <form id="businessRegistrationForm" method="post" action="/login/registerCommerce">
             <legend class="mt-4">Business Details</legend>
             <div class="row">
-                <div class="col-md-6 mb-3">
-                    <label for="businessName" class="form-label">Business Name</label>
-                    <input type="text" class="form-control" id="businessName" required>
+                 <div class="col-md-6 mb-3">
+                    <label for="username" class="form-label">Business Name</label>
+                    <input type="text" class="form-control" id="username" name="username" required>
                 </div>
                 <div class="col-md-6 mb-3">
                     <label for="businessPhone" class="form-label">Phone</label>
-                    <input type="tel" class="form-control" id="businessPhone" required>
+                    <input type="tel" class="form-control" id="businessPhone" name="phone"  required>
                 </div>
             </div>
             <div class="row">
                 <div class="col-md-6 mb-3">
                     <label for="businessEmail" class="form-label">Email</label>
-                    <input type="email" class="form-control" id="businessEmail" required>
+                    <input type="email" class="form-control" id="businessEmail" name="email" required>
                 </div>
                 <div class="col-md-6 mb-3">
                     <label for="businessLogo" class="form-label">Logo</label>
-                    <input type="file" class="form-control" id="businessLogo" required>
+                    <input type="file" class="form-control" id="businessLogo" name="Image" required>
                 </div>
             </div>
             <div class="row">
                 <div class="col-md-6 mb-3">
                     <label for="openingHours" class="form-label">Opening Hours</label>
-                    <input type="time" class="form-control" id="openingHours" required>
+                    <input type="time" class="form-control" id="openingHours" name="openingTime" required>
                 </div>
                 <div class="col-md-6 mb-3">
                     <label for="closingHours" class="form-label">Closing Hours</label>
-                    <input type="time" class="form-control" id="closingHours" required>
+                    <input type="time" class="form-control" id="closingHours" name="closingTime" required>
                 </div>
             </div>
             <div class="mb-3">
                 <label for="businessType" class="form-label">Business Type</label>
-                <select id="businessType" class="form-select" required>
-                    <option value="">Select Business Type</option>
-                    <option value="retail">Retail</option>
-                    <option value="restaurant">Restaurant</option>
-                    <option value="service">Service</option>
-                    <option value="other">Other</option>
+                <select id="businessType" class="form-select" name="commerceType" required>
+                    <option value="" selected disabled>Select Business Type</option>
+               {{#each commerceTypes}}
+                    <option value="{{this.id}}">{{this.name}}</option>
+               {{/each}}
                 </select>
             </div>
 
             <legend class="mt-4">Account Details</legend>
             <div class="row">
-                <div class="col-md-6 mb-3">
-                    <label for="username" class="form-label">Username</label>
-                    <input type="text" class="form-control" id="username" required>
-                </div>
+              
                 <div class="col-md-6 mb-3">
                     <label for="password" class="form-label">Password</label>
-                    <input type="password" class="form-control" id="password" required>
+                    <input type="password" class="form-control" name="password" id="password" required>
                 </div>
             </div>
             <div class="row">
                 <div class="col-md-6 mb-3">
                     <label for="confirmPassword" class="form-label">Confirm Password</label>
-                    <input type="password" class="form-control" id="confirmPassword" required>
+                    <input type="password" class="form-control" name="confirmPassword" id="confirmPassword" required>
                 </div>
             </div>
             <button type="submit" class="btn w-100 btn__commerce__register">Register</button>

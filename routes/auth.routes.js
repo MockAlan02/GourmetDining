@@ -23,10 +23,10 @@ const router = require("./customer.routes");
 
 routes.get('/', getLogin);
 routes.get("/resetPassword/:token", getnewPassword);
+routes.post("/resetPassword", resetPasswordToken);
 routes.post("/newpasswordToken/:token", resetPassword);
 routes.get("/confirmation/:token", getactivationpage);
 routes.get('/newPassword', getResetPassword);
-routes.post("/resetPassword", resetPasswordToken);
 routes.post("/login", login, postLogin);
 routes.post("/registerCommerce", commerce, postRegisterCommerceCliente);
 routes.get("/registercommerce", getRegisterCommerce);

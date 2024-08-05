@@ -64,8 +64,13 @@ function getRegister(req, res) {
       page: "register",
     };
 }
-function getRegisterCommerce(req, res) {
-  res.render("auth/registerCommerce"),
+
+async function getRegisterCommerce(req, res) {
+  let commerceTypes = await CommerceType.findAll();
+  commerceTypes = commerceTypes.map((type) => type.dataValues);
+  res.render("auth/registerCommerce",{
+    commerceTypes
+  }),
     {
       title: "Register - Gourmet Dinning",
       page: "register",
@@ -135,10 +140,16 @@ async function getnewPassword(req, res) {
     req.flash("error", "Token not found");
     return res.redirect("auth/newPass");
   }
-  if(token.expireAt < Date.now()){
+  if (token.expireAt < Date.now()) {
     req.flash("error", "Token expired");
     return res.redirect("auth/newPass");
   }
+  
+  if(token.purpose !== "resetPassword"){
+    req.flash("error", "Invalid token");
+    return res.redirect("auth/newPass");
+  }
+
   res.render("auth/confirmNewPass", {
     title: "Reset Password - Gourmet Dinning",
     token: req.params.token,
@@ -185,27 +196,27 @@ async function emailResetPassword(email, req) {
   if (!user) {
     req.flash("error", "User not found");
     res.render("auth/newPass"),
-    {
-      page: "newPass",
-      title: "Reset Password - Gourmet Dinning",
-    };
+      {
+        page: "newPass",
+        title: "Reset Password - Gourmet Dinning",
+      };
   }
   if (user.isVerified === false) {
     req.flash("error", "User not verified");
     res.render("auth/newPass"),
-    {
-      page: "newPass",
-      title: "Reset Password - Gourmet Dinning",
-    };
+      {
+        page: "newPass",
+        title: "Reset Password - Gourmet Dinning",
+      };
   }
 
   if (user.role === "admin") {
     req.flash("error", "Admin cannot reset password");
     res.render("auth/newPass"),
-    {
-      page: "newPass",
-      title: "Reset Password - Gourmet Dinning",
-    };
+      {
+        page: "newPass",
+        title: "Reset Password - Gourmet Dinning",
+      };
   }
 
   const token = new Token({
@@ -334,12 +345,9 @@ async function postRegisterCommerceCliente(req, res) {
     return res.redirect("/register");
   }
   const {
-    name,
-    lastName,
     phone,
     email,
     username,
-    role,
     password,
     confirmPassword,
     openingTime,
@@ -371,28 +379,23 @@ async function postRegisterCommerceCliente(req, res) {
     return res.redirect("/register");
   }
   const user = new User({
-    name,
-    lastName,
     phone,
     email,
     username,
-    role,
+    role : "commerce",
     password: hashedPassword,
     picture,
     openingTime,
     closingTime,
     commerceType,
   });
-  user
-    .save()
-    .then((result) => {
-      res.redirect("/login");
-    })
-    .catch((err) => {
-      console.log(err);
-      req.flash("error", "Internal server error");
-      res.redirect("/register");
-    });
+  const responseuser = await user.save();
+  if (responseuser) {
+    req.flash("error", "Internal server error");
+    res.redirect("/register");
+  }
+  await emailActivation(email, req);
+  res.redirect("/login");
 }
 
 function logout(req, res) {
@@ -422,16 +425,24 @@ async function getactivationpage(req, res) {
     req.flash("error", "Token not found");
     return res.render("auth/mailActivationError");
   }
+  if(token.expireAt < Date.now()){
+    req.flash("error", "Token expired");
+    return res.render("auth/mailActivationError");
+  }
+  if(token.purpose !== "emailActivation"){
+    req.flash("error", "Invalid token");
+    return res.render("auth/mailActivationError");
+  }
   const user = await User.findOne({ where: { id: token.userId } });
   if (!user) {
     req.flash("error", "User not found");
-    return res.render("auth/mailActivationError");
+    return res.redirect("/login");
   }
   user.isActive = true;
   await user.save();
   await token.destroy();
   req.flash("success", "Account verified");
-  res.render("auth/activationpage", {
+  res.render("auth/mailActivation", {
     title: "Activation - Gourmet Dinning",
   });
 }
@@ -449,5 +460,5 @@ module.exports = {
   getactivationpage,
   resetPasswordToken,
   getnewPassword,
-  resetPassword
+  resetPassword,
 };
