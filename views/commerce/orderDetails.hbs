@@ -1,0 +1,55 @@
+<div class="container mt-4">
+    <div class="card mb-4">
+        <div class="card-body">
+            <div class="d-flex justify-content-between align-items-center">
+                <div>
+                    <h2>PIZCA DE SAL</h2>
+                    <p class="text-muted">EN PROCESO</p>
+                    <p class="text-muted">jue 18 de jul, 03:07 pm</p>
+                </div>
+                <div>
+                    <!-- Imagen del comercio o logo -->
+                    <img src="/path/to/logo.png" alt="Pizca De Sal Logo" style="width: 50px;">
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <h3>El pedido</h3>
+    <ul class="list-group mb-4">
+        <li class="list-group-item d-flex justify-content-between align-items-center">
+            <div class="d-flex align-items-center">
+                <img src="/path/to/galletas-de-guayaba.jpg" alt="Galletas De Guayaba" class="img-thumbnail mr-3" style="width: 50px; height: 50px;">
+                <span>Galletas De Guayaba</span>
+            </div>
+            <span>RD$ 235</span>
+        </li>
+        <li class="list-group-item d-flex justify-content-between align-items-center">
+            <div class="d-flex align-items-center">
+                <img src="/path/to/galletas-chispas-chocolate.jpg" alt="Galletas De Chispas De Chocolate" class="img-thumbnail mr-3" style="width: 50px; height: 50px;">
+                <span>Galletas De Chispas De Chocolate</span>
+            </div>
+            <span>RD$ 235</span>
+        </li>
+        <li class="list-group-item d-flex justify-content-between align-items-center">
+            <div class="d-flex align-items-center">
+                <img src="/path/to/tres-leches-de-oreo.jpg" alt="Tres Leches De Oreo" class="img-thumbnail mr-3" style="width: 50px; height: 50px;">
+                <span>Tres Leches De Oreo</span>
+            </div>
+            <span>RD$ 355</span>
+        </li>
+    </ul>
+
+    <div class="d-flex justify-content-between align-items-center">
+        <h4>Total</h4>
+        <h4>RD$ 925</h4>
+    </div>
+
+    {{#if order.isPending}}
+    <form action="/commerce/order/{{order.id}}/assign-delivery" method="POST">
+        <button type="submit" class="btn btn-success mt-3">Assign Delivery</button>
+    </form>
+    {{/if}}
+
+    <a href="/commerce/home" class="btn btn-secondary mt-3">Back to Home</a>
+</div>

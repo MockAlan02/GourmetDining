@@ -1,0 +1,39 @@
+<h1>Commerce List</h1>
+<table class="table">
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Logo</th>
+      <th>Orders</th>
+      <th>Phone number</th>
+      <th>Opening time</th>
+      <th>Closing time</th>
+      <th>Email</th>
+      <th>Actions</th>
+    </tr>
+  </thead>
+  <tbody>
+    {{#each commerces}}
+    <tr>
+      <td>{{this.name}}</td>
+      <td><img src="{{this.logo}}" alt="Logo" width="50"></td>
+      <td>{{this.orderCount}}</td>
+      <td>{{this.phone}}</td>
+      <td>{{this.openingTime}}</td>
+      <td>{{this.closingTime}}</td>
+      <td>{{this.email}}</td>
+      <td>
+        {{#if this.isActive}}
+        <form action="/admin/commerces/{{this.id}}/toggle" method="POST">
+          <button type="submit" class="btn btn-danger">Inactivate</button>
+        </form>
+        {{else}}
+        <form action="/admin/commerces/{{this.id}}/toggle" method="POST">
+          <button type="submit" class="btn btn-success">Activate</button>
+        </form>
+        {{/if}}
+      </td>
+    </tr>
+    {{/each}}
+  </tbody>
+</table>

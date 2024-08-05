@@ -1,0 +1,27 @@
+<section class="video-section">
+    <video autoplay muted loop>
+        <source src="https://static.videezy.com/system/resources/previews/000/051/399/original/001063-party-C0056.mp4"
+            type="video/webm">
+    </video>
+    <div class="video-overlay"></div>
+    <div class="video-content">
+        <h1>What do you want to eat today?</h1>
+    </div>
+</section>
+<section class="container mt-5">
+    <h2 class="mb-4">Discover our specialty options</h2>
+    <div class="row">
+        {{#each commerceTypes}}
+        <div class="col-md-4 mb-4">
+            <a href="#" class="card-link">
+                <div class="card" style="background-image: url('{{this.picture}}');">
+                    <div class="card-body card-content">
+                        <p class="card-title "><strong>{{this.name}}</strong></p>
+                    </div>
+                </div>
+            </a>
+        </div>
+        {{/each}}
+    </div>
+</section>
+

@@ -1,0 +1,80 @@
+<section class="register-section">
+    <form id="registerForm" method="post" action="/login/registerclient" enctype="multipart/form-data">
+        <div class="form__start">
+            <h1>Register</h1>
+            <a href="javascript:history.back()" class="btn btn-link">
+            <i class="fas fa-arrow-left"></i> Back
+        </a>
+        </div>
+        <p class="legend">Personal Data</p>
+        <div class="row mb-3">
+            <div class="col-md-6">
+                <label for="firstName" class="form-label">First Name</label>
+                <input type="text" class="form-control" id="firstName" name="name" required placeholder="John">
+            </div>
+            <div class="col-md-6">
+                <label for="lastName" class="form-label">Last Name</label>
+                <input type="text" class="form-control" id="lastName" name="lastName" required placeholder="Doe">
+            </div>
+        </div>
+        <div class="row mb-3">
+            <div class="col-md-6">
+                <label for="phone" class="form-label">Phone</label>
+                <input type="tel" class="form-control" id="phone" name="phone" required placeholder="+1 212 555 1234">
+            </div>
+            <div class="col-md-6">
+                <label for="email" class="form-label">Email</label>
+                <input type="email" class="form-control" id="email" name="email" required placeholder="jonhDoe@gmail.com">
+            </div>
+        </div>
+        <div class="mb-3">
+            <label for="profilePhoto" class="form-label">Profile Photo</label>
+            <input type="file" class="form-control" id="profilePhoto" name="Image" accept="image/*" required>
+        </div>
+        <p class="legend">User Type</p>
+        <div class="mb-3">
+            <label for="userType" class="form-label" >Select User Type</label>
+            <select class="form-select" id="userType" name="role" required>
+                <option value="delivery">Delivery</option>
+                <option value="user">Customer</option>
+            </select>
+        </div>
+        <p class="legend">Account Data</p>
+        <div class="row mb-3">
+            <div class="col-md-6">
+                <label for="username" class="form-label">Username</label>
+                <input type="text" class="form-control" id="username" name="username" required placeholder="joeDoe06">
+            </div>
+        </div>
+        <div class="row mb-3">
+            <div class="col-md-6">
+                <label for="newPassword" class="form-label">Password</label>
+                <input type="password" class="form-control" id="newPassword" name="password" required placeholder="your pass">
+            </div>
+            <div class="col-md-6">
+                <label for="confirmPassword" class="form-label">Confirm Password</label>
+                <input type="password" class="form-control" id="confirmPassword" name="confirmPassword" required placeholder="your pass">
+            </div>
+        </div>
+        <button type="submit" class="btn btn-primary w-100">Register</button>
+    </form>
+</section>
+
+<!-- Password Mismatch Modal -->
+<div class="modal fade" id="passwordMismatchModal" tabindex="-1" aria-labelledby="passwordMismatchModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="passwordMismatchModalLabel">Password Mismatch</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                The passwords do not match. Please try again.
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>

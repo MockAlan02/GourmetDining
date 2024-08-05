@@ -1,0 +1,24 @@
+<section class="login-section">
+    <div class="login-form-container">
+        <img src="img/brand.png" alt="Profile Picture">
+        <h1>Welcome back!</h1>
+        <form method="post" action="/login/login">
+            <input type="email" class="form-control" placeholder="Email" name="email" required>
+            <input type="password" class="form-control" placeholder="Password" name="password" required>
+            <div class="text-right">
+                <a class="forgot-password mb-4" href="/newPassword">Forgot your password?</a>
+            </div>
+            <button type="submit" class="btn btn-pill">Login</button>
+        </form>
+        <div class="divider mt-3">
+
+            <p>or</p>
+
+        </div>
+        <div class="registration-buttons">
+            <a class="btn btn-pill" href="/registerclient">Register as Customer or Delivery</a>
+            <a class="btn btn-pill btn__commerce-register" href="/registercommerce">Register as Commerce</a>
+        </div>
+    </div>
+    <div class="design-container"></div>
+</section>
