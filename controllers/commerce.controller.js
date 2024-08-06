@@ -266,7 +266,7 @@ module.exports = {
       res.status(500).send("Error al obtener la categoría");
     }
   },
-
+//revisar bien
   async updateCategory(req, res) {
     try {
       const errors = validationResult(req);
