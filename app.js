@@ -1,5 +1,4 @@
 require("dotenv").config();
-
 const express = require("express");
 const path = require("path");
 const app = express();
@@ -107,16 +106,16 @@ const authRoutes = require("./routes/auth.routes");
 const deliveryRoutes = require("./routes/delivery.routes");
 const adminRoutes = require("./routes/admin.routes");
 const commerceRoutes = require("./routes/commerce.routes");
-const { isatty } = require("tty");
+
 
 // Rutas públicas
-app.use("/", isNotAuth, authRoutes);
+app.use("/", authRoutes);
 app.use("/login", authRoutes);
 
 
 // Rutas protegidas
 app.use("/customer", isAuth, authorizeRole("user"), customerRoutes);
-app.use("/commerce", isAuth, authorizeRole("commerce"), commerceRoutes);
+app.use("/commerce",isAuth, commerceRoutes);
 app.use("/delivery", isAuth, authorizeRole("delivery"), deliveryRoutes);
 app.use("/admin", isAuth, authorizeRole("admin"), adminRoutes);
 

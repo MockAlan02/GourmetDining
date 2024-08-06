@@ -7,7 +7,6 @@ const transporter = require("../services/sendEmail");
 const Token = require("../models/userToken");
 const crypto = require("crypto");
 const exp = require("constants");
-const { config } = require("dotenv");
 function getLogin(req, res) {
   res.render("auth/login", {
     title: "Login - Gourmet Dinning",
@@ -15,49 +14,45 @@ function getLogin(req, res) {
   });
 }
 
-function postLogin(req, res) {
+async function postLogin(req, res) {
   const errors = validationResult(req);
+
   if (!errors.isEmpty()) {
     req.flash("error", errors.array()[0].msg);
     return res.redirect("/login");
   }
 
   const { email, password } = req.body;
-  User.findOne({ where: { email } })
-    .then((result) => {
-      if (!result) {
-        req.flash("error", "User not found");
-        res.redirect("/login");
-      }
-      if (result.isVerified === false) {
-        req.flash("error", "User not verified");
-        return res.redirect("/login");
-      }
-      const isMatch = bcrypt.compareSync(password, result.password);
-      if (!isMatch) {
-        req.flash("error", "Invalid credentials");
-        res.redirect("/login");
-      }
-      console.log("User is logged ");
-      req.session.user = result;
+  let user = await User.findOne({ where: { email } });
+  user = user.dataValues;
+  if (!user) {
+    req.flash("error", "User not found");
+    return res.redirect("/login");
+  }
+  const isMatch = bcrypt.compareSync(password, user.password);
+  if (!isMatch) {
+    req.flash("error", "Invalid credentials");
+    return res.redirect("/login");
+  }
 
-      req.flash("success", "Welcome");
-      const roleRoutes = {
-        admin: "/admin",
-        user: "/customer",
-        delivery: "/delivery",
-      };
-      if (roleRoutes[result.role]) {
-        return res.redirect(roleRoutes[result.role]);
-      } else {
-        return res.status(400).send("Role not found");
-      }
-    })
-    .catch((err) => {
-      console.log(err);
-      req.flash("error", "Internal server error");
-      res.redirect("/login");
-    });
+  if (!user.isActive) {
+    req.flash("error", "User not verified");
+    return res.redirect("/login");
+  }
+
+  req.session.user = user;
+  req.flash("success", "Welcome");
+
+  const roleRoutes = {
+    admin: "/admin",
+    user: "/customer",
+    commerce: "/commerce",
+    delivery: "/delivery",
+  };
+
+  const redirectUrl = roleRoutes[user.role] || "/login";
+  console.log(redirectUrl);
+  return res.redirect(redirectUrl); // Ensure this line performs the redirection
 }
 
 function getRegister(req, res) {
@@ -137,7 +132,7 @@ async function resetPasswordToken(req, res) {
 
 //Reset password page
 async function getnewPassword(req, res) {
-  console.log(req.params.token);
+  
   const token = await Token.findOne({ where: { token: req.params.token } });
   if (!token) {
     req.flash("error", "Token not found");
@@ -162,8 +157,6 @@ async function getnewPassword(req, res) {
 //Reset password
 async function resetPassword(req, res) {
   const { password, confirmPassword } = req.body;
-  console.log(password);
-  console.log(req.params.token);
   const token = await Token.findOne({ where: { token: req.params.token } });
   if (!token) {
     req.flash("error", "Token not found");
@@ -304,7 +297,6 @@ async function postRegisterClientOrDelivery(req, res) {
   }
 
   const picture = file.path.replace(/^public/, "");
-  console.log(picture);
   if (password !== confirmPassword) {
     req.flash("error", "Passwords do not match");
     return res.redirect("/registerclient");

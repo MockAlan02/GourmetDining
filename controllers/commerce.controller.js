@@ -3,27 +3,29 @@ const User = require("../models/user");
 const Order = require("../models/orders");
 const Product = require("../models/product");
 const OrderProduct = require("../models/orderProduct");
+const { errorHandler } = require("../helpers/errorHandler");
 const Genre = require("../models/genre");
-
-const sequelize = require("sequelize");
+const { validationResult } = require("express-validator");
 const fs = require("fs");
 const path = require("path");
+const { get } = require("../services/sendEmail");
+
+async function getProductById(id) {
+  let product = await Product.findOne({ where: { id } });
+  return product.dataValues;
+}
 
 module.exports = {
   async index(req, res) {
-    try {
-      let commerceTypes = await CommerceType.findAll();
-      commerceTypes = commerceTypes.map((type) => type.dataValues);
-      res.render("commerce/commerceHome", {
-        commerceTypes,
-        title: "Home Commerce - Gourmet Dinning",
-        page: "commerce",
-      });
-    } catch (error) {
-      res.status(500).send("Error al obtener los tipos de comercio");
-    }
+    let commerceTypes = await CommerceType.findAll();
+    commerceTypes = commerceTypes.map((type) => type.dataValues);
+    console.log(commerceTypes);
+    res.render("commerce/commerceHome", {
+      commerceTypes,
+      title: "Home Commerce - Gourmet Dinning",
+      page: "commerce",
+    });
   },
-
   async getHome(req, res) {
     try {
       const commerceId = req.user.id; // Asume que el ID del comercio logueado está en req.user.id
@@ -332,15 +334,19 @@ module.exports = {
     const commerceId = req.session.user.id;
 
     let products = await Product.findAll({
-      where: { commerceId },
+      where: { IdCommerce: commerceId },
     });
-    products = products.map((product) => {
-      let genre = Genre.findOne({ where: { id: product.dataValues.genreId } });
-      return { ...product.dataValues, genre: genre.dataValues.name };
-    });
+    const productsWithGenre = await Promise.all(
+      products.map(async (product) => {
+        const genre = await Genre.findOne({
+          where: { id: product.dataValues.IdGenre },
+        });
+        return { ...product.dataValues, genre: genre.dataValues.name };
+      })
+    );
 
     res.render("commerce/productsList", {
-      products,
+      products: productsWithGenre,
       title: "Mantenimiento de Productos - Gourmet Dinning",
       page: "products",
     });
@@ -348,12 +354,10 @@ module.exports = {
 
   async createProductForm(req, res) {
     try {
-      const categories = await CommerceType.findAll({
-        where: { commerceId: req.user.id },
-      });
-
-      res.render("commerce/products/create", {
-        categories,
+      let genreProduct = await Genre.findAll();
+      genreProduct = genreProduct.map((genre) => genre.dataValues);
+      res.render("commerce/createProduct", {
+        genreProduct,
         title: "Crear Producto - Gourmet Dinning",
         page: "products",
       });
@@ -364,24 +368,28 @@ module.exports = {
 
   async createProduct(req, res) {
     try {
-      const { name, description, price, categoryId } = req.body;
-
-      if (!name || !description || !price || !categoryId) {
-        return res.status(400).send("Todos los campos son requeridos");
+      const errors = validationResult(req);
+      if (!errors.isEmpty()) {
+        req.flash("error", errors.array()[0].msg);
+        return res.redirect("/commerce/products/create");
       }
 
-      let imagePath = null;
-      if (req.file) {
-        imagePath = `/uploads/${req.file.filename}`;
+      const { name, description, price, category } = req.body;
+      const file = req.file;
+      if (!file) {
+        req.flash("error", "La imagen es requerida");
+        return res.redirect("/commerce/products/create");
       }
 
-      await Product.create({
+      const picture = file.path.replace(/^public/, "");
+
+      const response = await Product.create({
         name,
         description,
         price,
-        image: imagePath,
-        categoryId,
-        commerceId: req.user.id,
+        picture,
+        IdGenre: category,
+        IdCommerce: req.session.user.id,
       });
 
       res.redirect("/commerce/products");
@@ -391,102 +399,100 @@ module.exports = {
   },
 
   async editProductForm(req, res) {
-    try {
-      const productId = req.params.id;
-      const product = await Product.findByPk(productId);
+    const { id } = req.params;
+    let product = await getProductById(id);
 
-      if (!product) {
-        return res.status(404).send("Producto no encontrado");
-      }
-
-      const categories = await CommerceType.findAll({
-        where: { commerceId: req.user.id },
-      });
-
-      res.render("commerce/products/edit", {
-        product,
-        categories,
-        title: "Editar Producto - Gourmet Dinning",
-        page: "products",
-      });
-    } catch (error) {
-      res.status(500).send("Error al obtener el producto");
+    if (!product) {
+      req.flash("error", "Producto no encontrado");
+      return res.redirect("/commerce/products");
     }
+
+    let genre = await Genre.findAll();
+    genre = genre.map((genre) => genre.dataValues);
+
+    res.render("commerce/editProduct", {
+      product,
+      categories: genre,
+      title: "Editar Producto - Gourmet Dinning",
+      page: "products",
+    });
   },
 
   async updateProduct(req, res) {
     try {
-      const productId = req.params.id;
-      const { name, description, price, categoryId } = req.body;
-      const product = await Product.findByPk(productId);
+      const { id } = req.params;
+      const errors = validationResult(req);
+      if (!errors.isEmpty()) {
+        req.flash("error", errors.array()[0].msg);
+        return res.redirect(`/commerce/products/edit/` + id);
+      }
 
+      // Fetch the product
+      const product = await Product.findOne({ where: { id } });
       if (!product) {
-        return res.status(404).send("Producto no encontrado");
+        req.flash("error", "Producto no encontrado");
+        return res.redirect("/commerce/products");
       }
 
-      if (!name || !description || !price || !categoryId) {
-        return res.status(400).send("Todos los campos son requeridos");
-      }
-
-      let imagePath = product.image;
+      // Update product details
+      const { name, description, price, category } = req.body;
       if (req.file) {
-        // Eliminar la imagen anterior si existe
-        if (product.image) {
-          fs.unlinkSync(path.join(__dirname, "..", "public", product.image));
-        }
-        imagePath = `/uploads/${req.file.filename}`;
+        const picture = req.file.path.replace(/^public/, "");
+        product.picture = picture;
       }
 
       product.name = name;
       product.description = description;
       product.price = price;
-      product.image = imagePath;
-      product.categoryId = categoryId;
+      product.IdGenre = category;
       await product.save();
 
       res.redirect("/commerce/products");
     } catch (error) {
-      res.status(500).send("Error al actualizar el producto");
+      req.flash("error", "Error al actualizar el producto");
+      res.redirect(`/commerce/products/edit/` + id);
     }
   },
 
   async deleteProductConfirm(req, res) {
     try {
-      const productId = req.params.id;
-      const product = await Product.findByPk(productId);
+      const { id } = req.params;
+      const product = await getProductById(id);
 
       if (!product) {
-        return res.status(404).send("Producto no encontrado");
+        req.flash("error", "Producto no encontrado");
+        return res.redirect("/commerce/products");
       }
 
-      res.render("commerce/products/delete", {
+      res.render("commerce/deleteProduct", {
+        id,
         product,
         title: "Eliminar Producto - Gourmet Dinning",
         page: "products",
       });
     } catch (error) {
-      res.status(500).send("Error al obtener el producto");
+      req.flash("error", "Error al obtener el producto");
+      res.redirect("/commerce/products");
     }
   },
 
   async deleteProduct(req, res) {
     try {
-      const productId = req.params.id;
-      const product = await Product.findByPk(productId);
-
+      const { id } = req.params;
+      const product = await Product.findOne({ where: { id } }); // Make sure to use the correct model
+  
       if (!product) {
-        return res.status(404).send("Producto no encontrado");
+        req.flash("error", "Producto no encontrado");
+        return res.redirect("/commerce/products");
       }
-
-      // Eliminar la imagen del producto si existe
-      if (product.image) {
-        fs.unlinkSync(path.join(__dirname, "..", "public", product.image));
-      }
-
+  
       await product.destroy();
+      req.flash("success", "Producto eliminado exitosamente");
       res.redirect("/commerce/products");
     } catch (error) {
-      res.status(500).send("Error al eliminar el producto");
+      console.error(error); // Log the error for debugging
+      req.flash("error", "Error al eliminar el producto");
+      res.redirect("/commerce/products");
     }
   },
 };

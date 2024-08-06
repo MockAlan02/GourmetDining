@@ -18,14 +18,9 @@ function redirectBasedOnRole(req, res) {
 function isAuth(req, res, next) {
   console.log(req.path);
   if (req.session.user) {
-    // Si el usuario está autenticado y trata de acceder a /login o /, redirigir según el rol
-    if (req.path === "/login" || req.path === "/") {
-      return redirectBasedOnRole(req, res);
-    }
-    // Si el usuario está autenticado y no intenta acceder a /login o /, proceder al siguiente middleware
     return next();
   }
-  // Si el usuario no está autenticado, redirigir a /login
+  
   req.flash("error", "Debes iniciar sesión para acceder a esta página");
   return res.redirect("/login");
 }
