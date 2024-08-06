@@ -268,7 +268,7 @@ async function confirmation(req, res) {
   user.save();
   token.remove();
   req.flash("success", "Account verified");
-  res.render("auth/mailActivation");
+  res.render("auth/activationpage");
 }
 
 //Register For client or delivery
@@ -444,7 +444,7 @@ async function getactivationpage(req, res) {
   await user.save();
   await token.destroy();
   req.flash("success", "Account verified");
-  res.render("auth/mailActivation", {
+  res.render("auth/activationpage", {
     title: "Activation - Gourmet Dinning",
   });
 }

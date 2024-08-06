@@ -53,9 +53,18 @@ const product = [
   body("price").isNumeric().withMessage("Price must be a number"),
   body("category").isNumeric().withMessage("Category must be a number"),
 ];
+
+const genre = [
+  body("name")
+    .isString()
+    .withMessage("Name must be a string")
+    .isLength({ min: 5 })
+    .withMessage("Your name must be at least 5 characters long"),
+];
 module.exports = {
   login,
   clientOrDelivery,
   commerce,
   product,
+  genre
 };

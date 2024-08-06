@@ -1,6 +1,6 @@
 const express = require("express");
 const router = express.Router();
-const { product: productvalidator } = require("../validators/validators");
+const { product: productvalidator, genre : genreValidator } = require("../validators/validators");
 const commerceController = require("../controllers/commerce.controller");
 
 router.get("/", commerceController.index);
@@ -28,7 +28,7 @@ router.get("/products/delete/:id", commerceController.deleteProductConfirm);
 router.post("/products/delete/:id", commerceController.deleteProduct);
 router.get("/categories", commerceController.listCategories);
 router.get("/categories/create", commerceController.createCategoryForm);
-router.post("/categories/create", commerceController.createCategory);
+router.post("/categories/create",genreValidator, commerceController.createCategory);
 router.get("/categories/edit/:id", commerceController.editCategoryForm);
 router.post("/categories/edit/:id", commerceController.updateCategory);
 router.get("/categories/delete/:id", commerceController.deleteCategoryConfirm);

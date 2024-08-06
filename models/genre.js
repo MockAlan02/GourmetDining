@@ -11,5 +11,9 @@ const Genre = connection.define("Genre", {
         type: sequelize.STRING,
         allowNull: false,
     },
+    IdCommerce: {
+        type: sequelize.INTEGER,
+        allowNull: false,
+    },
     });
 module.exports = Genre;

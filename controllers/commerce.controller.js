@@ -9,6 +9,7 @@ const { validationResult } = require("express-validator");
 const fs = require("fs");
 const path = require("path");
 const { get } = require("../services/sendEmail");
+const { promises } = require("dns");
 
 async function getProductById(id) {
   let product = await Product.findOne({ where: { id } });
@@ -197,29 +198,23 @@ module.exports = {
 
   async listCategories(req, res) {
     try {
-      const commerceId = req.user.id; // ID del comercio logueado
-      const categories = await CommerceType.findAll({
-        where: { commerceId },
-        attributes: ["id", "name", "description"],
-        include: [
-          {
-            model: Product,
-            attributes: [],
-            through: {
-              attributes: [],
-            },
-          },
-        ],
-        group: ["CommerceType.id"],
+      const commerceId = req.session.user.id; // ID del comercio logueado
+      let categories = await CommerceType.findAll({
+        where: { IdCommerce: commerceId },
       });
-
-      const formattedCategories = categories.map((category) => ({
-        ...category.dataValues,
-        productCount: category.products.length,
-      }));
-
-      res.render("categories/list", {
-        categories: formattedCategories,
+      const categoriesWithCount = await Promise.all(
+        categories.map(async (category) => {
+          const products = await Product.findAll({
+            where: { IdGenre: category.id },
+          });
+          return {
+            ...category.dataValues,
+            productCount: products.length, // Use products.length directly
+          };
+        })
+      );
+      res.render("categoriesList", {
+        categories: categoriesWithCount,
         title: "Mantenimiento de Categorías - Gourmet Dinning",
         page: "categories",
       });
@@ -229,7 +224,7 @@ module.exports = {
   },
 
   async createCategoryForm(req, res) {
-    res.render("categories/create", {
+    res.render("commerce/createCategorie", {
       title: "Crear Categoría - Gourmet Dinning",
       page: "categories",
     });
@@ -237,15 +232,18 @@ module.exports = {
 
   async createCategory(req, res) {
     try {
-      const { name, description } = req.body;
-      if (!name || !description) {
-        return res.status(400).send("Todos los campos son requeridos");
+      const errors = validationResult(req);
+      if (!errors.isEmpty()) {
+        req.flash("error", errors.array()[0].msg);
+        return res.redirect("/categories/create");
       }
+
+      const { name, description } = req.body;
 
       await CommerceType.create({
         name,
         description,
-        commerceId: req.user.id,
+        IdCommerce: req.session.user.id,
       });
 
       res.redirect("/categories");
@@ -256,15 +254,11 @@ module.exports = {
 
   async editCategoryForm(req, res) {
     try {
-      const categoryId = req.params.id;
-      const category = await CommerceType.findByPk(categoryId);
-
-      if (!category) {
-        return res.status(404).send("Categoría no encontrada");
-      }
+      const { id } = req.params;
+      let category = await CommerceType.findOne({ where: { id } });
 
       res.render("categories/edit", {
-        category,
+        category : category.dataValues,
         title: "Editar Categoría - Gourmet Dinning",
         page: "categories",
       });
@@ -275,10 +269,13 @@ module.exports = {
 
   async updateCategory(req, res) {
     try {
-      const { id, name, description } = req.body;
-      if (!name || !description) {
-        return res.status(400).send("Todos los campos son requeridos");
+      const errors = validationResult(req);
+      if (!errors.isEmpty()) {
+        req.flash("error", errors.array()[0].msg);
+        return res.redirect(`/categories/edit/` + req.body.id);
       }
+      const { id, name, description } = req.body;
+    
 
       const category = await CommerceType.findByPk(id);
       if (!category) {
@@ -480,12 +477,12 @@ module.exports = {
     try {
       const { id } = req.params;
       const product = await Product.findOne({ where: { id } }); // Make sure to use the correct model
-  
+
       if (!product) {
         req.flash("error", "Producto no encontrado");
         return res.redirect("/commerce/products");
       }
-  
+
       await product.destroy();
       req.flash("success", "Producto eliminado exitosamente");
       res.redirect("/commerce/products");

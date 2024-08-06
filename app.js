@@ -106,6 +106,7 @@ const authRoutes = require("./routes/auth.routes");
 const deliveryRoutes = require("./routes/delivery.routes");
 const adminRoutes = require("./routes/admin.routes");
 const commerceRoutes = require("./routes/commerce.routes");
+const { FORCE } = require("sequelize/lib/index-hints");
 
 
 // Rutas públicas
