@@ -121,21 +121,6 @@ module.exports = {
       title: "Commerces - Gourmet Dinning",
     });
   },
-
-  async favorite(req, res) {
-    const response = await Favorite.create({
-      IdUser: req.session.user.id,
-      IdCommerce: req.params.id,
-    });
-
-    if (response) {
-      req.flash("success", "Commerce added to favorites");
-      return res.redirect("/customer");
-    }
-    req.flash("error", "Error adding commerce to favorites");
-    res.redirect("/customer");
-  },
-
   async commerceDetails(req, res) {
     let commerce = await Commerce.findOne({
       where: {

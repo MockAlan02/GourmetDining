@@ -1,3 +1,4 @@
+require("dotenv").config();
 const User = require("../models/user");
 const bcrypt = require("bcryptjs");
 const CommerceType = require("../models/commerceType");
@@ -6,6 +7,7 @@ const transporter = require("../services/sendEmail");
 const Token = require("../models/userToken");
 const crypto = require("crypto");
 const exp = require("constants");
+const { config } = require("dotenv");
 function getLogin(req, res) {
   res.render("auth/login", {
     title: "Login - Gourmet Dinning",
@@ -36,8 +38,9 @@ function postLogin(req, res) {
         req.flash("error", "Invalid credentials");
         res.redirect("/login");
       }
+      console.log("User is logged ");
       req.session.user = result;
-      console.log(req.session.user);
+
       req.flash("success", "Welcome");
       const roleRoutes = {
         admin: "/admin",
@@ -68,8 +71,8 @@ function getRegister(req, res) {
 async function getRegisterCommerce(req, res) {
   let commerceTypes = await CommerceType.findAll();
   commerceTypes = commerceTypes.map((type) => type.dataValues);
-  res.render("auth/registerCommerce",{
-    commerceTypes
+  res.render("auth/registerCommerce", {
+    commerceTypes,
   }),
     {
       title: "Register - Gourmet Dinning",
@@ -93,7 +96,7 @@ async function emailActivation(email, req) {
   await token.save();
 
   const mailOptions = {
-    from: process.env.EMAIL,
+    from: process.env.EmailUser,
     to: user.email,
     subject: "Account Verification Token",
     text:
@@ -144,8 +147,8 @@ async function getnewPassword(req, res) {
     req.flash("error", "Token expired");
     return res.redirect("auth/newPass");
   }
-  
-  if(token.purpose !== "resetPassword"){
+
+  if (token.purpose !== "resetPassword") {
     req.flash("error", "Invalid token");
     return res.redirect("auth/newPass");
   }
@@ -342,7 +345,7 @@ async function postRegisterCommerceCliente(req, res) {
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
     req.flash("error", errors.array()[0].msg);
-    return res.redirect("/register");
+    return res.redirect("/registercommerce");
   }
   const {
     phone,
@@ -358,43 +361,50 @@ async function postRegisterCommerceCliente(req, res) {
   const file = req.file;
   if (!file) {
     req.flash("error", "Please upload a file");
-    return res.redirect("/register");
+    return res.redirect("/registercommerce");
   }
 
-  commerceType = await CommerceType.findOne({ where: { name: commerceType } });
+  let commerceTypedata = await CommerceType.findOne({
+    where: { name: commerceType },
+  });
   if (!commerceType) {
     req.flash("error", "Commerce type not found");
-    return res.redirect("/register");
+    return res.redirect("/registercommerce");
   }
 
   const picture = file.path.replace(/^public/, "");
   if (password !== confirmPassword) {
     req.flash("error", "Passwords do not match");
-    return res.redirect("/register");
+    return res.redirect("/registercommerce");
   }
   const hashedPassword = bcrypt.hashSync(password, 12);
   const response = await userValidation(email, username);
   if (response) {
     req.flash("error", response);
-    return res.redirect("/register");
+    return res.redirect("/registercommerce");
   }
   const user = new User({
     phone,
     email,
     username,
-    role : "commerce",
+    role: "commerce",
     password: hashedPassword,
     picture,
     openingTime,
     closingTime,
     commerceType,
   });
-  const responseuser = await user.save();
-  if (responseuser) {
-    req.flash("error", "Internal server error");
-    res.redirect("/register");
-  }
+
+  await user
+    .save()
+    .then(async (result) => {})
+    .catch((err) => {
+      console.log(err);
+      req.flash("error", "Internal server error");
+      res.redirect("/registercommerce");
+    });
   await emailActivation(email, req);
+
   res.redirect("/login");
 }
 
@@ -425,11 +435,11 @@ async function getactivationpage(req, res) {
     req.flash("error", "Token not found");
     return res.render("auth/mailActivationError");
   }
-  if(token.expireAt < Date.now()){
+  if (token.expireAt < Date.now()) {
     req.flash("error", "Token expired");
     return res.render("auth/mailActivationError");
   }
-  if(token.purpose !== "emailActivation"){
+  if (token.purpose !== "emailActivation") {
     req.flash("error", "Invalid token");
     return res.render("auth/mailActivationError");
   }

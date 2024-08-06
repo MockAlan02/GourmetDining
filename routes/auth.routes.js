@@ -28,8 +28,8 @@ routes.post("/newpasswordToken/:token", resetPassword);
 routes.get("/confirmation/:token", getactivationpage);
 routes.get('/newPassword', getResetPassword);
 routes.post("/login", login, postLogin);
-routes.post("/registerCommerce", commerce, postRegisterCommerceCliente);
 routes.get("/registercommerce", getRegisterCommerce);
+routes.post("/registerCommerce", commerce, postRegisterCommerceCliente);
 routes.get("/registerclient", getRegister);
 routes.post("/registerclient", clientOrDelivery, postRegisterClientOrDelivery);
 

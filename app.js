@@ -9,7 +9,7 @@ const flash = require("connect-flash");
 const session = require("express-session");
 const multer = require("multer");
 const { v4: uuidv4 } = require("uuid");
-const Authentication = require("./middlewares/is-auth");
+const { authorizeRole, isAuth, isNotAuth } = require("./middlewares/is-auth");
 
 const port = process.env.PORT || 3000;
 
@@ -105,20 +105,19 @@ app.use((req, res, next) => {
 const customerRoutes = require("./routes/customer.routes");
 const authRoutes = require("./routes/auth.routes");
 const deliveryRoutes = require("./routes/delivery.routes");
-const adminRoutes = require("./routes/admin.routes")
-const commerceRoutes = require("./routes/commerce.routes")
+const adminRoutes = require("./routes/admin.routes");
+const commerceRoutes = require("./routes/commerce.routes");
+const { isatty } = require("tty");
 
-app.use("/", authRoutes);
-
+// Rutas públicas
+app.use("/", isNotAuth, authRoutes);
 app.use("/login", authRoutes);
-//app.use(Authentication.isAuth);
-app.use("/customer",Authentication.authorizeRole("user"), customerRoutes);
-// app.use("/commerce", commerceRoutes);
 
-app.use("/commerce", commerceRoutes);
-
-app.use("/delivery", deliveryRoutes);
-app.use("/admin", adminRoutes);
+// Rutas protegidas
+app.use("/customer", isAuth, authorizeRole("user"), customerRoutes);
+app.use("/commerce", isAuth, authorizeRole("commerce"), commerceRoutes);
+app.use("/delivery", isAuth, authorizeRole("delivery"), deliveryRoutes);
+app.use("/admin", isAuth, authorizeRole("admin"), adminRoutes);
 
 // Manejo de errores 404
 app.use((req, res, next) => {
