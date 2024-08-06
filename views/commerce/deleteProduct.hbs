@@ -1,6 +1,6 @@
-    <h1>Delete product</h1>
-    <p>Are you sure you want to delete "{{product.name}}"?</p>
-    <form action="/commerce/products/delete/{{product.id}}" method="POST">
-        <button type="submit">Delete</button>
-        <a href="/commerce/products" class="btn">Cancel</a>
-    </form>
+<h1 class="mb-4">Delete Product</h1>
+<p class="mb-4">Are you sure you want to delete "<strong>{{product.name}}</strong>"?</p>
+<form action="/commerce/products/delete/{{product.id}}" method="POST">
+    <button type="submit" class="btn btn-danger">Delete</button>
+    <a href="/commerce/products" class="btn btn-secondary ml-2">Cancel</a>
+</form>

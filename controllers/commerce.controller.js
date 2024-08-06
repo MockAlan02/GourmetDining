@@ -196,7 +196,7 @@ module.exports = {
             res.render('categories/list', {
                 categories: formattedCategories,
                 title: 'Mantenimiento de Categorías - Gourmet Dinning',
-                page: "categories"
+                page: "commerce"
             });
         } catch (error) {
             res.status(500).send('Error al obtener las categorías');
@@ -206,7 +206,7 @@ module.exports = {
     async createCategoryForm(req, res) {
         res.render('categories/create', {
             title: 'Crear Categoría - Gourmet Dinning',
-            page: "categories"
+            page: "commerce"
         });
     },
 
@@ -241,7 +241,7 @@ module.exports = {
             res.render('categories/edit', {
                 category,
                 title: 'Editar Categoría - Gourmet Dinning',
-                page: "categories"
+                page: "commerce"
             });
         } catch (error) {
             res.status(500).send('Error al obtener la categoría');
@@ -282,7 +282,7 @@ module.exports = {
             res.render('categories/delete', {
                 category,
                 title: 'Eliminar Categoría - Gourmet Dinning',
-                page: "categories"
+                page: "commerce"
             });
         } catch (error) {
             res.status(500).send('Error al obtener la categoría');
@@ -321,7 +321,7 @@ module.exports = {
             res.render('commerce/products/list', {
                 products,
                 title: 'Mantenimiento de Productos - Gourmet Dinning',
-                page: "products"
+                page: "commerce"
             });
         } catch (error) {
             res.status(500).send('Error al obtener los productos');
@@ -337,7 +337,7 @@ module.exports = {
             res.render('commerce/products/create', {
                 categories,
                 title: 'Crear Producto - Gourmet Dinning',
-                page: "products"
+                page: "commerce"
             });
         } catch (error) {
             res.status(500).send('Error al obtener las categorías');
@@ -389,7 +389,7 @@ module.exports = {
                 product,
                 categories,
                 title: 'Editar Producto - Gourmet Dinning',
-                page: "products"
+                page: "commerce"
             });
         } catch (error) {
             res.status(500).send('Error al obtener el producto');
@@ -444,7 +444,7 @@ module.exports = {
             res.render('commerce/products/delete', {
                 product,
                 title: 'Eliminar Producto - Gourmet Dinning',
-                page: "products"
+                page: "commerce"
             });
         } catch (error) {
             res.status(500).send('Error al obtener el producto');

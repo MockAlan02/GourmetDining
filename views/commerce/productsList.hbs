@@ -1,30 +1,29 @@
-<h1>Products List</h1>
-<a href="/commerce/products/create" class="btn">Create New Product</a>
-<table>
-    <thead>
+<h1 class="mb-4">Products List</h1>
+<a href="/commerce/products/create" class="btn btn-primary mb-3">Create New Product</a>
+<table class="table table-striped table-hover">
+    <thead class="thead-dark">
         <tr>
-            <th>Name</th>
-            <th>Image</th>
-            <th>Description</th>
-            <th>Category</th>
-            <th>Price</th>
-            <th>Actions</th>
+            <th scope="col">Name</th>
+            <th scope="col">Image</th>
+            <th scope="col">Description</th>
+            <th scope="col">Category</th>
+            <th scope="col">Price</th>
+            <th scope="col">Actions</th>
         </tr>
     </thead>
     <tbody>
         {{#each products}}
         <tr>
             <td>{{this.name}}</td>
-            <td><img src="{{this.image}}" alt="{{this.name}}" width="100"></td>
+            <td><img src="{{this.image}}" alt="{{this.name}}" class="img-thumbnail" width="100"></td>
             <td>{{this.description}}</td>
             <td>{{this.commerceType.name}}</td>
             <td>${{this.price}}</td>
             <td>
-                <a href="/commerce/products/edit/{{this.id}}" class="btn">Edit</a>
-                <a href="/commerce/products/delete/{{this.id}}" class="btn">Delete</a>
+                <a href="/commerce/products/edit/{{this.id}}" class="btn btn-warning btn-sm">Edit</a>
+                <a href="/commerce/products/delete/{{this.id}}" class="btn btn-danger btn-sm">Delete</a>
             </td>
         </tr>
         {{/each}}
     </tbody>
 </table>
-
