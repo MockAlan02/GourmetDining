@@ -113,11 +113,13 @@ const { isatty } = require("tty");
 app.use("/", isNotAuth, authRoutes);
 app.use("/login", authRoutes);
 
+
 // Rutas protegidas
 app.use("/customer", isAuth, authorizeRole("user"), customerRoutes);
 app.use("/commerce", isAuth, authorizeRole("commerce"), commerceRoutes);
 app.use("/delivery", isAuth, authorizeRole("delivery"), deliveryRoutes);
 app.use("/admin", isAuth, authorizeRole("admin"), adminRoutes);
+
 
 // Manejo de errores 404
 app.use((req, res, next) => {
