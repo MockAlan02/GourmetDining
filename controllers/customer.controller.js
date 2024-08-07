@@ -28,11 +28,7 @@ module.exports = {
 
   async createAddress(req, res) {
     const { name, address } = req.body;
-    console.log(req.body);
-    if (req.session.user == null) {
-      req.flash("error", "You must be logged in to add an address");
-      return res.redirect("/login");
-    }
+
     const response = await Direccion.create({
       IdUser: req.session.user.id,
       name,
@@ -48,6 +44,21 @@ module.exports = {
     res.redirect("/customer/form/adress");
   },
 
+  async geteditaddress(req, res) {
+    const { id } = req.params;
+    let address = await Direccion.findOne({
+      where: {
+        id,
+      },
+    });
+    address = address.dataValues;
+    res.render("customer/newAdress", {
+      address,
+      title: "Edit Address - Gourmet Dinning",
+      page: "editaddress",
+    });
+  },
+
   async customeraddress(req, res) {
     let address = await Direccion.findAll({
       where: {
@@ -60,6 +71,28 @@ module.exports = {
       title: "Address - Gourmet Dinning",
       page: "customeraddress",
     });
+  },
+
+
+async editAddress(req, res) {
+    const { id } = req.params;
+    const {name, address} = req.body;
+    const direction = await Direccion.findOne({
+      where: {
+        id,
+      },
+    });
+
+    if (!direction) {
+      req.flash("error", "Address not found");
+      return res.redirect("/customer/address");
+    }
+    direction.name = name;
+    direction.address = address;
+    await direction.save();
+    req.flash("success", "Address updated successfully");
+    res.redirect("/customer/address");
+  
   },
 
   async deleteAddress(req, res) {
@@ -141,33 +174,38 @@ module.exports = {
       // Fetch genres for the commerce
       let genres = await Genre.findAll({ where: { IdCommerce: id } });
       genres = genres.map((genre) => genre.dataValues);
-      console.log(id)
+      console.log(id);
       console.log(genres);
       console.log(products);
       // Group products by genre
       let groupedProducts = genres
-  .map((genre) => {
-    let productsByGenre = products.filter((product) => product.IdGenre === genre.id);
-    console.log(`Products for genre ${genre.name}:`, productsByGenre);
-    return {
-      genre: genre.name,
-      products: productsByGenre,
-    };
-  })
-  .filter((group) => group.products.length > 0); // Solo incluir grupos no vacíos
+        .map((genre) => {
+          let productsByGenre = products.filter(
+            (product) => product.IdGenre === genre.id
+          );
+          console.log(`Products for genre ${genre.name}:`, productsByGenre);
+          return {
+            genre: genre.name,
+            products: productsByGenre,
+          };
+        })
+        .filter((group) => group.products.length > 0); // Solo incluir grupos no vacíos
 
-// Depuración: Log los productos agrupados usando JSON.stringify
-console.log("Grouped Products:", JSON.stringify(groupedProducts, null, 2));
+      // Depuración: Log los productos agrupados usando JSON.stringify
+      console.log(
+        "Grouped Products:",
+        JSON.stringify(groupedProducts, null, 2)
+      );
 
-    // Render the commerce details with grouped products
-    res.render("customer/commerceDetails", {
-      commerce,
-      products: groupedProducts,
-    });
-  } catch (error) {
-    console.error("Error fetching commerce details:", error);
-    res.status(500).send("Internal Server Error");
-  }
+      // Render the commerce details with grouped products
+      res.render("customer/commerceDetails", {
+        commerce,
+        products: groupedProducts,
+      });
+    } catch (error) {
+      console.error("Error fetching commerce details:", error);
+      res.status(500).send("Internal Server Error");
+    }
   },
 
   // Crear una orden
