@@ -1,30 +1,61 @@
-<h1>Products List</h1>
-<a href="/commerce/products/create" class="btn">Create New Product</a>
-<table>
-    <thead>
-        <tr>
-            <th>Name</th>
-            <th>Image</th>
-            <th>Description</th>
-            <th>Category</th>
-            <th>Price</th>
-            <th>Actions</th>
-        </tr>
-    </thead>
-    <tbody>
-        {{#each products}}
-        <tr>
-            <td>{{this.name}}</td>
-            <td><img src="{{this.image}}" alt="{{this.name}}" width="100"></td>
-            <td>{{this.description}}</td>
-            <td>{{this.commerceType.name}}</td>
-            <td>${{this.price}}</td>
-            <td>
-                <a href="/commerce/products/edit/{{this.id}}" class="btn">Edit</a>
-                <a href="/commerce/products/delete/{{this.id}}" class="btn">Delete</a>
-            </td>
-        </tr>
-        {{/each}}
-    </tbody>
-</table>
+<section class="container" style="min-height: 100dvh;">
+    <div class="d-flex justify-content-between align-items-center mb-4 mt-5">
+        <h1 class="mb-0">Products List</h1>
+        <a href="/commerce/products/create" class="btn btn-create">Create New Product</a>
+    </div>
+    <div class="table-container">
+        <table class="table table-hover table-striped table-bordered">
+            <thead class="table-dark">
+                <tr>
+                    <th>Name</th>
+                    <th>Image</th>
+                    <th>Description</th>
+                    <th>Category</th>
+                    <th>Price</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {{#if products}}
+                {{#each products}}
+                <tr>
+                    <td>{{this.name}}</td>
+                    <td><img src="{{this.picture}}" alt="{{this.name}}" class="img-fluid product-image" /></td>
+                    <td>{{this.description}}</td>
+                    <td>{{this.genre}}</td>
+                    <td>${{this.price}}</td>
+                    <td>
+                        <a href="/commerce/products/edit/{{this.id}}" class="btn btn-secondary btn-sm btn-custom">Edit</a>
+                        <a href="/commerce/products/delete/{{this.id}}" class="btn btn-danger btn-sm">Delete</a>
+                    </td>
+                </tr>
+                {{/each}}
+                {{else}}
+                <tr>
+                    <td colspan="6" class="text-center">No products found</td>
+                </tr>
+                {{/if}}
+            </tbody>
+        </table>
+    </div>
+</section>
 
+<style>
+    .table-container {
+        overflow-x: auto;
+    }
+
+    .product-image {
+        max-width: 50px;
+        max-height: 50px;
+        object-fit: cover;
+    }
+
+    .table-actions a {
+        margin-right: 5px;
+    }
+
+    .btn-create {
+        white-space: nowrap;
+    }
+</style>

@@ -1,3 +1,4 @@
+require("dotenv").config();
 const User = require("../models/user");
 const bcrypt = require("bcryptjs");
 const CommerceType = require("../models/commerceType");
@@ -13,68 +14,64 @@ function getLogin(req, res) {
   });
 }
 
-function postLogin(req, res) {
+async function postLogin(req, res) {
   const errors = validationResult(req);
+
   if (!errors.isEmpty()) {
     req.flash("error", errors.array()[0].msg);
     return res.redirect("/login");
   }
 
   const { email, password } = req.body;
-  User.findOne({ where: { email } })
-    .then((result) => {
-      if (!result) {
-        req.flash("error", "User not found");
-        res.redirect("/login");
-      }
-      if (result.isVerified === false) {
-        req.flash("error", "User not verified");
-        return res.redirect("/login");
-      }
-      const isMatch = bcrypt.compareSync(password, result.password);
-      if (!isMatch) {
-        req.flash("error", "Invalid credentials");
-        res.redirect("/login");
-      }
-      req.session.user = result;
-      console.log(req.session.user);
-      req.flash("success", "Welcome");
-      const roleRoutes = {
-        admin: "/admin",
-        user: "/customer",
-        delivery: "/delivery",
-      };
-      if (roleRoutes[result.role]) {
-        return res.redirect(roleRoutes[result.role]);
-      } else {
-        return res.status(400).send("Role not found");
-      }
-    })
-    .catch((err) => {
-      console.log(err);
-      req.flash("error", "Internal server error");
-      res.redirect("/login");
-    });
+  let user = await User.findOne({ where: { email } });
+  user = user.dataValues;
+  if (!user) {
+    req.flash("error", "User not found");
+    return res.redirect("/login");
+  }
+  const isMatch = bcrypt.compareSync(password, user.password);
+  if (!isMatch) {
+    req.flash("error", "Invalid credentials");
+    return res.redirect("/login");
+  }
+
+  if (!user.isActive) {
+    req.flash("error", "User not verified");
+    return res.redirect("/login");
+  }
+
+  req.session.user = user;
+  req.flash("success", "Welcome");
+
+  const roleRoutes = {
+    admin: "/admin",
+    user: "/customer",
+    commerce: "/commerce",
+    delivery: "/delivery",
+  };
+
+  const redirectUrl = roleRoutes[user.role] || "/login";
+  console.log(redirectUrl);
+  return res.redirect(redirectUrl); // Ensure this line performs the redirection
 }
 
 function getRegister(req, res) {
-  res.render("auth/registerCustumerDelivery"),
-    {
-      title: "Register - Gourmet Dinning",
-      page: "register",
-    };
+
+  res.render("auth/registerCustumerDelivery", {
+    title: "Register - Gourmet Dinning",
+    page: "register",
+  });
 }
 
 async function getRegisterCommerce(req, res) {
   let commerceTypes = await CommerceType.findAll();
   commerceTypes = commerceTypes.map((type) => type.dataValues);
-  res.render("auth/registerCommerce",{
-    commerceTypes
-  }),
-    {
-      title: "Register - Gourmet Dinning",
-      page: "register",
-    };
+
+  res.render("auth/registerCommerce", {
+    commerceTypes,
+    title: "Register - Gourmet Dinning",
+    page: "register",
+  });
 }
 
 async function emailActivation(email, req) {
@@ -93,7 +90,7 @@ async function emailActivation(email, req) {
   await token.save();
 
   const mailOptions = {
-    from: process.env.EMAIL,
+    from: process.env.EmailUser,
     to: user.email,
     subject: "Account Verification Token",
     text:
@@ -118,11 +115,11 @@ async function emailActivation(email, req) {
 }
 //Reset password page
 async function getResetPassword(req, res) {
-  res.render("auth/newPass"),
-    {
-      page: "newPass",
-      title: "Reset Password - Gourmet Dinning",
-    };
+  
+  res.render("auth/newPass", {
+    title: "Reset Password - Gourmet Dinning",
+    page: "login",
+  });
 }
 
 async function resetPasswordToken(req, res) {
@@ -134,7 +131,7 @@ async function resetPasswordToken(req, res) {
 
 //Reset password page
 async function getnewPassword(req, res) {
-  console.log(req.params.token);
+
   const token = await Token.findOne({ where: { token: req.params.token } });
   if (!token) {
     req.flash("error", "Token not found");
@@ -144,8 +141,8 @@ async function getnewPassword(req, res) {
     req.flash("error", "Token expired");
     return res.redirect("auth/newPass");
   }
-  
-  if(token.purpose !== "resetPassword"){
+
+  if (token.purpose !== "resetPassword") {
     req.flash("error", "Invalid token");
     return res.redirect("auth/newPass");
   }
@@ -159,8 +156,6 @@ async function getnewPassword(req, res) {
 //Reset password
 async function resetPassword(req, res) {
   const { password, confirmPassword } = req.body;
-  console.log(password);
-  console.log(req.params.token);
   const token = await Token.findOne({ where: { token: req.params.token } });
   if (!token) {
     req.flash("error", "Token not found");
@@ -196,27 +191,28 @@ async function emailResetPassword(email, req) {
   if (!user) {
     req.flash("error", "User not found");
     res.render("auth/newPass"),
-      {
-        page: "newPass",
-        title: "Reset Password - Gourmet Dinning",
-      };
+    {
+      title: "Reset Password - Gourmet Dinning",
+      page: "newPass"
+    };
   }
   if (user.isVerified === false) {
     req.flash("error", "User not verified");
     res.render("auth/newPass"),
-      {
-        page: "newPass",
-        title: "Reset Password - Gourmet Dinning",
-      };
+    {
+      title: "Reset Password - Gourmet Dinning",
+      page: "newPass"
+      
+    };
   }
 
   if (user.role === "admin") {
     req.flash("error", "Admin cannot reset password");
     res.render("auth/newPass"),
-      {
-        page: "newPass",
-        title: "Reset Password - Gourmet Dinning",
-      };
+    {
+      title: "Reset Password - Gourmet Dinning",
+      page: "newPass"
+    };
   }
 
   const token = new Token({
@@ -272,7 +268,7 @@ async function confirmation(req, res) {
   user.save();
   token.remove();
   req.flash("success", "Account verified");
-  res.render("auth/mailActivation");
+  res.render("auth/activationpage");
 }
 
 //Register For client or delivery
@@ -301,7 +297,6 @@ async function postRegisterClientOrDelivery(req, res) {
   }
 
   const picture = file.path.replace(/^public/, "");
-  console.log(picture);
   if (password !== confirmPassword) {
     req.flash("error", "Passwords do not match");
     return res.redirect("/registerclient");
@@ -327,7 +322,7 @@ async function postRegisterClientOrDelivery(req, res) {
 
   await user
     .save()
-    .then(async (result) => {})
+    .then(async (result) => { })
     .catch((err) => {
       console.log(err);
       req.flash("error", "Internal server error");
@@ -342,7 +337,7 @@ async function postRegisterCommerceCliente(req, res) {
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
     req.flash("error", errors.array()[0].msg);
-    return res.redirect("/register");
+    return res.redirect("/registercommerce");
   }
   const {
     phone,
@@ -358,43 +353,50 @@ async function postRegisterCommerceCliente(req, res) {
   const file = req.file;
   if (!file) {
     req.flash("error", "Please upload a file");
-    return res.redirect("/register");
+    return res.redirect("/registercommerce");
   }
 
-  commerceType = await CommerceType.findOne({ where: { name: commerceType } });
+  let commerceTypedata = await CommerceType.findOne({
+    where: { name: commerceType },
+  });
   if (!commerceType) {
     req.flash("error", "Commerce type not found");
-    return res.redirect("/register");
+    return res.redirect("/registercommerce");
   }
 
   const picture = file.path.replace(/^public/, "");
   if (password !== confirmPassword) {
     req.flash("error", "Passwords do not match");
-    return res.redirect("/register");
+    return res.redirect("/registercommerce");
   }
   const hashedPassword = bcrypt.hashSync(password, 12);
   const response = await userValidation(email, username);
   if (response) {
     req.flash("error", response);
-    return res.redirect("/register");
+    return res.redirect("/registercommerce");
   }
   const user = new User({
     phone,
     email,
     username,
-    role : "commerce",
+    role: "commerce",
     password: hashedPassword,
     picture,
     openingTime,
     closingTime,
     commerceType,
   });
-  const responseuser = await user.save();
-  if (responseuser) {
-    req.flash("error", "Internal server error");
-    res.redirect("/register");
-  }
+
+  await user
+    .save()
+    .then(async (result) => { })
+    .catch((err) => {
+      console.log(err);
+      req.flash("error", "Internal server error");
+      res.redirect("/registercommerce");
+    });
   await emailActivation(email, req);
+
   res.redirect("/login");
 }
 
@@ -425,11 +427,11 @@ async function getactivationpage(req, res) {
     req.flash("error", "Token not found");
     return res.render("auth/mailActivationError");
   }
-  if(token.expireAt < Date.now()){
+  if (token.expireAt < Date.now()) {
     req.flash("error", "Token expired");
     return res.render("auth/mailActivationError");
   }
-  if(token.purpose !== "emailActivation"){
+  if (token.purpose !== "emailActivation") {
     req.flash("error", "Invalid token");
     return res.render("auth/mailActivationError");
   }
@@ -442,7 +444,7 @@ async function getactivationpage(req, res) {
   await user.save();
   await token.destroy();
   req.flash("success", "Account verified");
-  res.render("auth/mailActivation", {
+  res.render("auth/activationpage", {
     title: "Activation - Gourmet Dinning",
   });
 }

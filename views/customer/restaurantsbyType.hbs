@@ -1,181 +1,47 @@
+<section class="container search-section mt-3">
+  <div class="search-bar">
+    <input type="text" class="form-control" placeholder="Search..." />
+    <button class="btn btn-primary">Search</button>
+  </div>
+  <p class="text-left mt-1" style="margin-left: 10px;"><strong>180 restaurants</strong></p>
+</section>
 
+<section class="container mt-3 mb-5">
+  <div class="row row-cols-1 row-cols-md-2 row-cols-lg-4 g-4">
+    {{!-- Arreglar lo de las fotos --}}
+    {{#each commerce}}
+      <div class="col">
+        <a href="/customer/commerceDetails/{{this.id}}" class="card__commerce-type">
+          <div class="like__space-commerce" ></div>
+          <div class="card__commerce-type-body mt-1 mb-3">
+            <button class="btn btn-heart" onclick="handleClick(event)"><i class="fas fa-heart"></i></button>
+            <a href="#" class="card-link" onclick="event.preventDefault();">
+              <h3 class="card-title">{{this.username}}</h3>
+            </a>
+          </div>
+        </a>
+      </div>
+    {{/each}}
+  </div>
+</section>
 
-    <section class="container search-section mt-3">
-        <div class="search-bar">
-            <input type="text" class="form-control" placeholder="Search...">
-            <button class="btn btn-primary">Search</button>
-        </div>
-        <p class="text-left mt-1" style="margin-left: 10px;"><strong>180 restaurants</strong></p>
-    </section>
-
-
-    <section class="container mt-3 mb-5">
-        <div class="row row-cols-1 row-cols-md-2 row-cols-lg-4 g-4">
-            <div class="col">
-
-                <div class="card__commerce-type">
-                    <a href="#" class="card-link" onclick="event.preventDefault();">
-                        <div class="like__space-commerce"></div>
-                    </a>
-                    <div class="card__commerce-type-body mt-1 mb-3">
-                        <button class="btn btn-heart" onclick="handleClick(event)"><i class="fas fa-heart"></i></button>
-                        <a href="#" class="card-link" onclick="event.preventDefault();">
-                            <h3 class="card-title">BurguerKing</h3>
-                        </a>
-                    </div>
-
-                </div>
-
-            </div>
-            <div class="col">
-
-                <div class="card__commerce-type">
-                    <a href="#" class="card-link" onclick="event.preventDefault();">
-                        <div class="like__space-commerce"></div>
-                    </a>
-                    <div class="card__commerce-type-body mt-1 mb-3">
-                        <button class="btn btn-heart" onclick="handleClick(event)"><i class="fas fa-heart"></i></button>
-                        <a href="#" class="card-link" onclick="event.preventDefault();">
-                            <h3 class="card-title">BurguerKing</h3>
-                        </a>
-                    </div>
-
-                </div>
-
-            </div>
-            <div class="col">
-
-                <div class="card__commerce-type">
-                    <a href="#" class="card-link" onclick="event.preventDefault();">
-                        <div class="like__space-commerce"></div>
-                    </a>
-                    <div class="card__commerce-type-body mt-1 mb-3">
-                        <button class="btn btn-heart" onclick="handleClick(event)"><i class="fas fa-heart"></i></button>
-                        <a href="#" class="card-link" onclick="event.preventDefault();">
-                            <h3 class="card-title">BurguerKing</h3>
-                        </a>
-                    </div>
-
-                </div>
-
-            </div>
-            <div class="col">
-
-                <div class="card__commerce-type">
-                    <a href="#" class="card-link" onclick="event.preventDefault();">
-                        <div class="like__space-commerce"></div>
-                    </a>
-                    <div class="card__commerce-type-body mt-1 mb-3">
-                        <button class="btn btn-heart" onclick="handleClick(event)"><i class="fas fa-heart"></i></button>
-                        <a href="#" class="card-link" onclick="event.preventDefault();">
-                            <h3 class="card-title">BurguerKing</h3>
-                        </a>
-                    </div>
-
-                </div>
-
-            </div>
-            <div class="col">
-
-                <div class="card__commerce-type">
-                    <a href="#" class="card-link" onclick="event.preventDefault();">
-                        <div class="like__space-commerce"></div>
-                    </a>
-                    <div class="card__commerce-type-body mt-1 mb-3">
-                        <button class="btn btn-heart" onclick="handleClick(event)"><i class="fas fa-heart"></i></button>
-                        <a href="#" class="card-link" onclick="event.preventDefault();">
-                            <h3 class="card-title">BurguerKing</h3>
-                        </a>
-                    </div>
-
-                </div>
-
-            </div>
-            <div class="col">
-
-                <div class="card__commerce-type">
-                    <a href="#" class="card-link" onclick="event.preventDefault();">
-                        <div class="like__space-commerce"></div>
-                    </a>
-                    <div class="card__commerce-type-body mt-1 mb-3">
-                        <button class="btn btn-heart" onclick="handleClick(event)"><i class="fas fa-heart"></i></button>
-                        <a href="#" class="card-link" onclick="event.preventDefault();">
-                            <h3 class="card-title">BurguerKing</h3>
-                        </a>
-                    </div>
-
-                </div>
-
-            </div>
-            <div class="col">
-
-                <div class="card__commerce-type">
-                    <a href="#" class="card-link" onclick="event.preventDefault();">
-                        <div class="like__space-commerce"></div>
-                    </a>
-                    <div class="card__commerce-type-body mt-1 mb-3">
-                        <button class="btn btn-heart" onclick="handleClick(event)"><i class="fas fa-heart"></i></button>
-                        <a href="#" class="card-link" onclick="event.preventDefault();">
-                            <h3 class="card-title">BurguerKing</h3>
-                        </a>
-                    </div>
-
-                </div>
-
-            </div>
-            <div class="col">
-
-                <div class="card__commerce-type">
-                    <a href="#" class="card-link" onclick="event.preventDefault();">
-                        <div class="like__space-commerce"></div>
-                    </a>
-                    <div class="card__commerce-type-body mt-1 mb-3">
-                        <button class="btn btn-heart" onclick="handleClick(event)"><i class="fas fa-heart"></i></button>
-                        <a href="#" class="card-link" onclick="event.preventDefault();">
-                            <h3 class="card-title">BurguerKing</h3>
-                        </a>
-                    </div>
-
-                </div>
-
-            </div>
-            <div class="col">
-
-                <div class="card__commerce-type">
-                    <a href="#" class="card-link" onclick="event.preventDefault();">
-                        <div class="like__space-commerce"></div>
-                    </a>
-                    <div class="card__commerce-type-body mt-1 mb-3">
-                        <button class="btn btn-heart" onclick="handleClick(event)"><i class="fas fa-heart"></i></button>
-                        <a href="#" class="card-link" onclick="event.preventDefault();">
-                            <h3 class="card-title">BurguerKing</h3>
-                        </a>
-                    </div>
-
-                </div>
-
-            </div>
-        </div>
-    </section>
-
-    <script>
-        function handleClick(event) {
-            event.stopPropagation(); // Previene que el clic en el botón propague al enlace
-            const button = event.currentTarget;
-            button.classList.toggle('clicked'); // Alterna la clase para cambiar el color
-
-            // Aquí puedes manejar el envío del POST sin recargar la página
-            console.log('Botón clickeado');
-            // Ejemplo de código para enviar un POST
-            // fetch('/your-endpoint', {
-            //     method: 'POST',
-            //     headers: {
-            //         'Content-Type': 'application/json'
-            //     },
-            //     body: JSON.stringify({ /* tus datos aquí */ })
-            // })
-            // .then(response => response.json())
-            // .then(data => console.log(data))
-            // .catch(error => console.error('Error:', error));
-        }
-    </script>
+<script>
+  function handleClick(event) {
+    event.stopPropagation(); // Previene que el clic en el botón propague al enlace
+    const button = event.currentTarget;
+    button.classList.toggle('clicked'); // Alterna la clase para cambiar el color
+    // Aquí puedes manejar el envío del POST sin recargar la página
+    console.log('Botón clickeado');
+    // Ejemplo de código para enviar un POST
+    // fetch('/your-endpoint', {
+    //   method: 'POST',
+    //   headers: {
+    //     'Content-Type': 'application/json'
+    //   },
+    //   body: JSON.stringify({ /* tus datos aquí */ })
+    // })
+    // .then(response => response.json())
+    // .then(data => console.log(data))
+    // .catch(error => console.error('Error:', error));
+  }
+</script>

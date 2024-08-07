@@ -1,109 +1,131 @@
 <section class="container-fluid mt-5">
-    <div class="row product__space-car">
-        <div class="col-md-8">
-            <div class="row">
-                <div class="col-md-6 mb-3">
-                    <div class="card__product-commerce">
-                        <div class="card__product-commerce-body">
-                            <h5 class="card-title">Pizza Club</h5>
-                            <p class="card-text">Some quick example text to build on the card title and make up the
-                                bulk of the card's content.</p>
-                            <div class="details__product-commerce">
-                                <h5 class="mt-2">$420</h5>
-                                <button class="btn-pill">Add</button>
-                            </div>
-
-                        </div>
-                        <img src="https://via.placeholder.com/150" class="card-img-top" alt="Card Image 2">
-                    </div>
-                </div>
-                <div class="col-md-6 mb-3">
-                    <div class="card__product-commerce">
-                        <div class="card__product-commerce-body">
-                            <h5 class="card-title">Pizza Club</h5>
-                            <p class="card-text">Some quick example text to build on the card title and make up the
-                                bulk of the card's content.</p>
-                            <div class="details__product-commerce">
-                                <h5 class="mt-2">$420</h5>
-                                <button class="btn-pill">Add</button>
-                            </div>
-
-                        </div>
-                        <img src="https://via.placeholder.com/150" class="card-img-top" alt="Card Image 2">
-                    </div>
-                </div>
-                <div class="col-md-6 mb-3">
-                    <div class="card__product-commerce">
-                        <div class="card__product-commerce-body">
-                            <h5 class="card-title">Pizza Club</h5>
-                            <p class="card-text">Some quick example text to build on the card title and make up the
-                                bulk of the card's content.</p>
-                            <div class="details__product-commerce">
-                                <h5 class="mt-2">$420</h5>
-                                <button class="btn-pill">Add</button>
-                            </div>
-
-                        </div>
-                        <img src="https://via.placeholder.com/150" class="card-img-top" alt="Card Image 2">
-                    </div>
-                </div>
-                <div class="col-md-6 mb-3">
-                    <div class="card__product-commerce">
-                        <div class="card__product-commerce-body">
-                            <h5 class="card-title">Pizza cLUB</h5>
-                            <p class="card-text">Some quick example text to build on the card title and make up the
-                                bulk of the card's content.</p>
-                            <div class="details__product-commerce">
-                                <h5 class="mt-2">$420</h5>
-                                <button class="btn-pill">Add</button>
-                            </div>
-
-                        </div>
-                        <img src="https://via.placeholder.com/150" class="card-img-top" alt="Card Image 2">
-                    </div>
-                </div>
-                <div class="col-md-6 mb-3">
-                    <div class="card__product-commerce">
-                        <div class="card__product-commerce-body">
-                            <h5 class="card-title">Pizza cLUB</h5>
-                            <p class="card-text">Some quick example text to build on the card title and make up the
-                                bulk of the card's content.</p>
-                            <div class="details__product-commerce">
-                                <h5 class="mt-2">$420</h5>
-                                <button class="btn-pill">Add</button>
-                            </div>
-
-                        </div>
-                        <img src="https://via.placeholder.com/150" class="card-img-top" alt="Card Image 2">
-                    </div>
-                </div>
-                <div class="col-md-6 mb-3">
-                    <div class="card__product-commerce">
-                        <div class="card__product-commerce-body">
-                            <h5 class="card-title">Pizza cLUB</h5>
-                            <p class="card-text">Some quick example text to build on the card title and make up the
-                                bulk of the card's content.</p>
-                            <div class="details__product-commerce">
-                                <h5 class="mt-2">$420</h5>
-                                <button class="btn-pill">Add</button>
-                            </div>
-
-                        </div>
-                        <img src="https://via.placeholder.com/150" class="card-img-top" alt="Card Image 2">
-                    </div>
-                </div>
+  <div class="row product__space-car">
+    <div class="col-md-8">
+      <div class="row">
+        {{#if products}}
+          {{#each products}}
+          <div class="row">
+            <div class="col-12 text-center">
+              <h3 class="mb-4">{{this.genre}}</h3>
             </div>
-        </div>
-        <div class="col-md-4 fixed-sidebar">
-            <div class="card__details-product">
-                <div class="card-body">
-                    <h5 class="card-title">My Order</h5>
-                    <div class="content__details-product">
-                        <img src="img/empty.svg" alt="Car Empty" class="mb-2 mt-1">
-                        <p class="card-text">Your car is empty</p>
-                    </div>
-                </div>
-            </div>
-        </div>
+            {{#each this.products}}
+              <div class="col-md-6 mb-3">
+                <div class="  h-100">
+                  <img src="{{this.picture}}" class="card-img-top" alt="{{this.name}}">
+                  <div class="card-body">
+                    <h5 class="card-title">{{this.name}}</h5>
+                    <p class="card-text">{{this.description}}.</p>
+                    <div class="details__product-commerce mt-3">
+                      <h5 class="text-success">${{this.price}}</h5>
+<!-- Button trigger modal -->
+<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#staticBackdrop">
+  Launch static backdrop modal
+</button>
+
+<!-- Modal -->
+<div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="staticBackdropLabel">Modal title</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+      <input type="hidden" id="productId" value="{{this.id}}">
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary">Understood</button>
+      </div>
     </div>
+  </div>
+</div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            {{/each}}
+          </div>
+          {{/each}}
+        {{/if}}
+      </div>
+    </div>
+    <div class="col-md-4 fixed-sidebar">
+      <div class="card__details-product">
+        <div class="card-body">
+          <h5 class="card-title">My Order</h5>
+          <div class="content__details-product">
+            <img src="img/empty.svg" alt="Car Empty" class="mb-2 mt-1" />
+            <p class="card-text">Your car is empty</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
 </section>
+
+
+
+
+<script>
+  $('#quantityModal').on('show.bs.modal', function (event) {
+    var button = $(event.relatedTarget); 
+    var productId = button.data('id'); 
+    var productName = button.data('name'); 
+
+    var modal = $(this);
+    modal.find('#productId').val(productId);
+    modal.find('#productName').val(productName);
+  });
+
+  $('#saveQuantity').on('click', function () {
+    var productId = $('#productId').val();
+    var productName = $('#productName').val();
+    var productQuantity = $('#productQuantity').val();
+
+    var order = JSON.parse(localStorage.getItem('order')) || [];
+    order.push({ id: productId, name: productName, quantity: productQuantity });
+    localStorage.setItem('order', JSON.stringify(order));
+
+    $('#quantityModal').modal('hide');
+  });
+</script>
+
+
+<script>
+  $(document).ready(function() {
+    // Cuando se muestra el modal
+    $('#staticBackdrop').on('show.bs.modal', function (event) {
+      // Obtener el id del producto (ajusta esto según cómo obtienes el id)
+      var productId = $(event.relatedTarget).data('id');
+      
+      // Aquí puedes ajustar la lógica para obtener la cantidad
+      var quantity = prompt("Ingrese la cantidad:");
+
+      // Guardar en localStorage
+      localStorage.setItem('productId', productId);
+      localStorage.setItem('quantity', quantity);
+    });
+  });
+</script>
+
+
+<style>
+  .card__product-commerce {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+  }
+  .card__product-commerce img {
+    object-fit: cover;
+    height: 200px;
+  }
+  .details__product-commerce {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .btn-pill {
+    border-radius: 50px;
+  }
+</style>

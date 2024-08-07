@@ -1,14 +1,21 @@
-<h1>Edit category</h1>
-<form action="/categories/edit" method="POST">
-    <input type="hidden" name="id" value="{{category.id}}">
-    <div class="form-group">
-        <label for="name">Name</label>
-        <input type="text" name="name" id="name" class="form-control" value="{{category.name}}" required>
-    </div>
-    <div class="form-group">
-        <label for="description">Description</label>
-        <textarea name="description" id="description" class="form-control" required>{{category.description}}</textarea>
-    </div>
-    <button type="submit" class="btn btn-primary">Save changes</button>
-    <a href="/categories" class="btn btn-secondary">Go back</a>
-</form>
+<section class="container mt-5 mb-3">
+  <section class="p-4 rounded shadow" style="background-color: white;">
+    <h1>Edit Category</h1>
+    <form action="/commerce/categories/edit/{{category.id}}" method="POST">
+      <div class="form-group">
+        <label for="name" class="form-label">Name</label>
+        <input type="text" name="name" id="name" class="form-control" value="{{category.name}}" required />
+      </div>
+      <div class="form-group">
+        <label for="description" class="form-label">Description</label>
+        <textarea name="description" id="description" class="form-control" rows="4"
+          required>{{category.description}}</textarea>
+      </div>
+      <div class="btn__space">
+        <button type="submit" class="btn btn__order" style="color: white; background-color:#E30613;">Save</button>
+        <a href="/commerce" class="btn btn-secondary">Go Back</a>
+      </div>
+    </form>
+  </section>
+
+</section>

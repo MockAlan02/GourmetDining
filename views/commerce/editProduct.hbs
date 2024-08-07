@@ -1,19 +1,50 @@
-    <h1>Edit Product</h1>
-    <form action="/commerce/products/edit/{{product.id}}" method="POST" enctype="multipart/form-data">
-        <label for="name">Name:</label>
-        <input type="text" name="name" value="{{product.name}}" required>
-        <label for="description">Description:</label>
-        <textarea name="description" required>{{product.description}}</textarea>
-        <label for="price">Price:</label>
-        <input type="number" name="price" value="{{product.price}}" step="0.01" required>
-        <label for="image">Image:</label>
-        <input type="file" name="image">
-        <label for="categoryId">Category:</label>
-        <select name="categoryId" required>
+ <div class="container">
+    <div class="form-container mt-5">
+      <h1>Edit Product</h1>
+      <form action="/commerce/products/edit/{{product.id}}" method="POST" enctype="multipart/form-data">
+        <div class="form-group">
+          <label for="name">Name:</label>
+          <input type="text" name="name" value="{{product.name}}" class="form-control" required>
+        </div>
+        <div class="form-group">
+          <label for="description">Description:</label>
+          <textarea name="description" class="form-control" required>{{product.description}}</textarea>
+        </div>
+        <div class="form-group">
+          <label for="price">Price:</label>
+          <input type="number" name="price" value="{{product.price}}" step="0.01" class="form-control" required>
+        </div>
+        <div class="form-group">
+          <label for="image">Image:</label>
+          <input type="file" name="Image" class="form-control-file">
+        </div>
+        <div class="form-group">
+          <label for="categoryId">Category:</label>
+          <select name="category" class="form-control" required>
+            <option value="">Select a category</option>
             {{#each categories}}
-            <option value="{{this.id}}" {{#ifEquals ../product.categoryId this.id}}selected{{/ifEquals}}>{{this.name}}</option>
+            <option value="{{this.id}}" {{#ifEquals ../product.IdGenre this.id}}selected{{/ifEquals}}>{{this.name}}</option>
             {{/each}}
-        </select>
-        <button type="submit">Update product</button>
-        <a href="/commerce/products" class="btn">Go back</a>
-    </form>
+          </select>
+        </div>
+        <button type="submit" class="btn btn-primary">Update product</button>
+        <a href="/commerce/products" class="btn btn-secondary">Go back</a>
+      </form>
+    </div>
+  </div>
+    <style>
+  .form-container {
+    max-width: 600px;
+    margin: auto;
+    padding: 20px;
+    background-color: #f7f7f7;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  }
+  .form-container h1 {
+    margin-bottom: 20px;
+  }
+  .form-container .btn {
+    margin-top: 10px;
+  }
+</style>

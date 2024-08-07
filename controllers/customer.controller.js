@@ -77,21 +77,22 @@ module.exports = {
     res.redirect("/customer/address");
   },
   async restaurantsbyType(req, res) {
-    let commerceTypes = await CommerceType.findAll();
-    commerceTypes = commerceTypes.map((type) => type.dataValues);
-    let commerce = await Commerce.findAll({
+    const { id } = req.params;
+
+    let commerce = await User.findAll({
       where: {
-        commerceTypeId: req.params.id,
+        commerceType: id,
       },
     });
 
-    commerce = commerce.map((commerce) => commerce.dataValues);
+    commerce = commerce.map((data) => data.dataValues);
+    console.log(commerce);
     if (!commerce) {
       req.flash("error", "No restaurants found");
       return res.redirect("/customer");
     }
+
     res.render("customer/restaurantsbyType", {
-      commerceTypes,
       commerce,
       commerceCount: commerce.length,
       title: "Commerces - Gourmet Dinning",
@@ -121,55 +122,52 @@ module.exports = {
       title: "Commerces - Gourmet Dinning",
     });
   },
-
-  async favorite(req, res) {
-    const response = await Favorite.create({
-      IdUser: req.session.user.id,
-      IdCommerce: req.params.id,
-    });
-
-    if (response) {
-      req.flash("success", "Commerce added to favorites");
-      return res.redirect("/customer");
-    }
-    req.flash("error", "Error adding commerce to favorites");
-    res.redirect("/customer");
-  },
-
   async commerceDetails(req, res) {
-    let commerce = await Commerce.findOne({
-      where: {
-        id: req.params.id,
-      },
-    });
-    commerce = commerce.dataValues;
-    let products = await Product.findAll({
-      where: {
-        IdCommerce: req.params.id,
-      },
-    });
-    products = products.map((product) => product.dataValues);
-    // Agrupar productos por género
-    let genres = await Genre.findAll();
-    genres = genres.map((genre) => genre.dataValues);
+    try {
+      const id = req.params.id;
 
-    // Agrupar productos por género
-    let groupedProducts = [];
-    genres.forEach((genre) => {
-      let productsByGenre = products.filter(
-        (product) => product.IdGenre === genre.id
-      );
-      if (productsByGenre.length > 0) {
-        groupedProducts.push({
-          genre: genre.name,
-          products: productsByGenre,
-        });
+      // Fetch commerce details
+      let commerce = await User.findOne({ where: { id } });
+      if (!commerce) {
+        req.flash("error", "Commerce not found");
+        return res.redirect("/customer");
       }
-    });
+      commerce = commerce.dataValues;
+
+      // Fetch products for the commerce
+      let products = await Product.findAll({ where: { IdCommerce: id } });
+      products = products.map((product) => product.dataValues);
+
+      // Fetch genres for the commerce
+      let genres = await Genre.findAll({ where: { IdCommerce: id } });
+      genres = genres.map((genre) => genre.dataValues);
+      console.log(id)
+      console.log(genres);
+      console.log(products);
+      // Group products by genre
+      let groupedProducts = genres
+  .map((genre) => {
+    let productsByGenre = products.filter((product) => product.IdGenre === genre.id);
+    console.log(`Products for genre ${genre.name}:`, productsByGenre);
+    return {
+      genre: genre.name,
+      products: productsByGenre,
+    };
+  })
+  .filter((group) => group.products.length > 0); // Solo incluir grupos no vacíos
+
+// Depuración: Log los productos agrupados usando JSON.stringify
+console.log("Grouped Products:", JSON.stringify(groupedProducts, null, 2));
+
+    // Render the commerce details with grouped products
     res.render("customer/commerceDetails", {
       commerce,
       products: groupedProducts,
     });
+  } catch (error) {
+    console.error("Error fetching commerce details:", error);
+    res.status(500).send("Internal Server Error");
+  }
   },
 
   // Crear una orden

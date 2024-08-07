@@ -1,33 +1,47 @@
-<div class="container mt-4">
+<section class="container mb-4" style="min-height: 100dvh;">
   <h2>My Profile</h2>
   <form action="/commerce/profile/update" method="POST" enctype="multipart/form-data">
     <div class="mb-3">
       <label for="logo" class="form-label">Logo</label>
-      <input type="file" class="form-control" id="logo" name="logo">
+      <input type="file" class="form-control" id="logo" name="Image" />
     </div>
     <div class="mb-3">
       <label for="openingTime" class="form-label">Opening hour</label>
-      <input type="time" class="form-control" id="openingTime" name="openingTime" value="{{commerce.openingTime}}" required>
+      <input type="time" class="form-control" id="openingTime" name="openingTime" value="{{commerce.openingTime}}"
+        required />
     </div>
     <div class="mb-3">
       <label for="closingTime" class="form-label">Closing hour</label>
-      <input type="time" class="form-control" id="closingTime" name="closingTime" value="{{commerce.closingTime}}" required>
+      <input type="time" class="form-control" id="closingTime" name="closingTime" value="{{commerce.closingTime}}"
+        required />
     </div>
     <div class="mb-3">
       <label for="phone" class="form-label">Phone number</label>
-      <input type="text" class="form-control" id="phone" name="phone" value="{{commerce.phone}}" required>
+      <input type="text" class="form-control" id="phone" name="phone" value="{{commerce.phone}}" required />
     </div>
     <div class="mb-3">
       <label for="email" class="form-label">Email</label>
-      <input type="email" class="form-control" id="email" name="email" value="{{commerce.email}}" required>
+      <input type="email" class="form-control" id="email" name="email" value="{{commerce.email}}" required />
     </div>
-    <button type="submit" class="btn btn-primary">Save</button>
-    <button type="button" class="btn btn-secondary" onclick="goBack()">Go back</button>
-  </form>
-</div>
+    <div class="btn__space">
+      <button type="submit" class="btn btn__order" style="color: white; background-color:#E30613;">Save</button>
+      <a href="/commerce" class="btn btn-secondary">Go Back</a>
+    </div>
 
-<script>
-  function goBack() {
-    window.history.back();
+  </form>
+</section>
+<style>
+  .container {
+    max-width: 600px;
+    margin-top: 4rem;
+    padding:
+      2rem;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    background-color: #f9f9f9;
   }
-</script>
+
+  .mb-3 {
+    margin-bottom: 1.5rem;
+  }
+</style>
