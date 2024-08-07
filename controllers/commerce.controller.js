@@ -3,13 +3,10 @@ const User = require("../models/user");
 const Order = require("../models/orders");
 const Product = require("../models/product");
 const OrderProduct = require("../models/orderProduct");
-const { errorHandler } = require("../helpers/errorHandler");
 const Genre = require("../models/genre");
 const { validationResult } = require("express-validator");
 const fs = require("fs");
 const path = require("path");
-const { get } = require("../services/sendEmail");
-const { promises } = require("dns");
 
 async function getProductById(id) {
   let product = await Product.findOne({ where: { id } });
@@ -195,17 +192,18 @@ module.exports = {
       res.status(500).send("Error al actualizar el perfil");
     }
   },
-
+  //ok
   async listCategories(req, res) {
     try {
       const commerceId = req.session.user.id; // ID del comercio logueado
-      let categories = await CommerceType.findAll({
+      let categories = await Genre.findAll({
         where: { IdCommerce: commerceId },
       });
+      console.log(categories);
       const categoriesWithCount = await Promise.all(
         categories.map(async (category) => {
           const products = await Product.findAll({
-            where: { IdGenre: category.id },
+            where: { IdGenre: category.dataValues.id },
           });
           return {
             ...category.dataValues,
@@ -213,7 +211,7 @@ module.exports = {
           };
         })
       );
-      res.render("categoriesList", {
+      res.render("commerce/categoriesList", {
         categories: categoriesWithCount,
         title: "Mantenimiento de Categorías - Gourmet Dinning",
         page: "categories",
@@ -222,14 +220,14 @@ module.exports = {
       res.status(500).send("Error al obtener las categorías");
     }
   },
-
+  //ok
   async createCategoryForm(req, res) {
     res.render("commerce/createCategorie", {
       title: "Crear Categoría - Gourmet Dinning",
       page: "categories",
     });
   },
-
+  //ok
   async createCategory(req, res) {
     try {
       const errors = validationResult(req);
@@ -237,16 +235,16 @@ module.exports = {
         req.flash("error", errors.array()[0].msg);
         return res.redirect("/categories/create");
       }
-
+      console.log(req.body);
       const { name, description } = req.body;
 
-      await CommerceType.create({
+      await Genre.create({
         name,
         description,
         IdCommerce: req.session.user.id,
       });
 
-      res.redirect("/categories");
+      res.redirect("/commerce/categories");
     } catch (error) {
       res.status(500).send("Error al crear la categoría");
     }
@@ -255,10 +253,10 @@ module.exports = {
   async editCategoryForm(req, res) {
     try {
       const { id } = req.params;
-      let category = await CommerceType.findOne({ where: { id } });
+      let category = await Genre.findOne({ where: { id } });
 
-      res.render("categories/edit", {
-        category : category.dataValues,
+      res.render("commerce/editCategory", {
+        category: category.dataValues,
         title: "Editar Categoría - Gourmet Dinning",
         page: "categories",
       });
@@ -266,27 +264,30 @@ module.exports = {
       res.status(500).send("Error al obtener la categoría");
     }
   },
-//revisar bien
+  //revisar bien
   async updateCategory(req, res) {
     try {
+      const { id } = req.params;
       const errors = validationResult(req);
       if (!errors.isEmpty()) {
         req.flash("error", errors.array()[0].msg);
-        return res.redirect(`/categories/edit/` + req.body.id);
+        return res.redirect(`/commerce/categories/edit/` + id);
       }
-      const { id, name, description } = req.body;
-    
 
-      const category = await CommerceType.findByPk(id);
+      const { name, description } = req.body;
+
+      let category = await Genre.findOne({ where: { id } });
       if (!category) {
-        return res.status(404).send("Categoría no encontrada");
+        req.flash("error", "Categoría no encontrada");
+        return res.redirect("/commerce/categories");
       }
-
+      category = category.dataValues;
       category.name = name;
       category.description = description;
+
       await category.save();
 
-      res.redirect("/categories");
+      res.redirect("/commerce/categories");
     } catch (error) {
       res.status(500).send("Error al actualizar la categoría");
     }
@@ -294,36 +295,42 @@ module.exports = {
 
   async deleteCategoryConfirm(req, res) {
     try {
-      const categoryId = req.params.id;
-      const category = await CommerceType.findByPk(categoryId);
-
+      const { id } = req.params;
+      let category = await Genre.findOne({ where: { id } });
+      category = category.dataValues;
       if (!category) {
-        return res.status(404).send("Categoría no encontrada");
+        req.flash("error", "Categoría no encontrada");
+        return res.redirect("/commerce/categories");
       }
 
-      res.render("categories/delete", {
+      res.render("commerce/deleteCategory", {
         category,
         title: "Eliminar Categoría - Gourmet Dinning",
         page: "categories",
       });
     } catch (error) {
-      res.status(500).send("Error al obtener la categoría");
+      console.error(error);
+      req.flash("error", "Error al obtener la categoría");
+      res.redirect("/commerce/categories");
     }
   },
 
   async deleteCategory(req, res) {
     try {
-      const categoryId = req.params.id;
-      const category = await CommerceType.findByPk(categoryId);
+      const { id } = req.params;
+      const category = await Genre.findOne({ where: { id } });
 
       if (!category) {
-        return res.status(404).send("Categoría no encontrada");
+        req.flash("error", "Categoría no encontrada");
+        return res.redirect("/categories");
       }
 
       await category.destroy();
-      res.redirect("/categories");
+      res.redirect("/commerce/categories");
     } catch (error) {
-      res.status(500).send("Error al eliminar la categoría");
+      console.error(error);
+      req.flash("error", "Error al eliminar la categoría");
+      res.redirect("/commerce/categories");
     }
   },
 

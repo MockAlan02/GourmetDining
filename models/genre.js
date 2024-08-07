@@ -11,6 +11,10 @@ const Genre = connection.define("Genre", {
         type: sequelize.STRING,
         allowNull: false,
     },
+    description : {
+        type: sequelize.STRING,
+        allowNull: false,
+    },
     IdCommerce: {
         type: sequelize.INTEGER,
         allowNull: false,

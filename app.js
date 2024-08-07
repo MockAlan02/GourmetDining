@@ -128,7 +128,7 @@ app.use((req, res, next) => {
 
 // Conectar a la base de datos y arrancar el servidor
 connection
-  .sync({ force: false })
+  .sync({ alter: false })
   .then((result) => {
     app.listen(port, () => {
       console.log(`Server running on http://localhost:${port}`);

@@ -17,15 +17,14 @@ router.post(
   commerceController.createProduct
 );
 router.get("/products/edit/:id", commerceController.editProductForm);
-
 router.post(
   "/products/edit/:id",
   productvalidator,
   commerceController.updateProduct
 );
-
 router.get("/products/delete/:id", commerceController.deleteProductConfirm);
 router.post("/products/delete/:id", commerceController.deleteProduct);
+
 router.get("/categories", commerceController.listCategories);
 router.get("/categories/create", commerceController.createCategoryForm);
 router.post("/categories/create",genreValidator, commerceController.createCategory);
