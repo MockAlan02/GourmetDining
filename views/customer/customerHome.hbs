@@ -13,7 +13,7 @@
     <div class="row">
         {{#each commerceTypes}}
         <div class="col-md-4 mb-4">
-            <a href="#" class="card-link">
+            <a href="/customer/restaurantsbyType/{{this.id}}" class="card-link">
                 <div class="card" style="background-image: url('{{this.picture}}');">
                     <div class="card-body card-content">
                         <p class="card-title "><strong>{{this.name}}</strong></p>
