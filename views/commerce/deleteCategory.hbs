@@ -1,7 +1,7 @@
 <div class="container">
   <h1>Delete Category</h1>
   <p class="confirmation-message">Are you sure you want to delete "{{category.name}}"?</p>
-  <form action="/categories/delete/{{this.id}}" method="POST">
+  <form action="/commerce/categories/delete/{{category.id}}" method="POST">
     <div class="btn-container">
       <button type="submit" class="btn btn-danger">Accept</button>
       <a href="/commerce/categories" class="btn btn-secondary">Cancel</a>

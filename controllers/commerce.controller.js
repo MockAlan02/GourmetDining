@@ -281,7 +281,6 @@ module.exports = {
         req.flash("error", "Categoría no encontrada");
         return res.redirect("/commerce/categories");
       }
-      category = category.dataValues;
       category.name = name;
       category.description = description;
 
@@ -289,6 +288,7 @@ module.exports = {
 
       res.redirect("/commerce/categories");
     } catch (error) {
+      console.error(error);
       res.status(500).send("Error al actualizar la categoría");
     }
   },
