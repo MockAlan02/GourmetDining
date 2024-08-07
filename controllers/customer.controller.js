@@ -77,21 +77,22 @@ module.exports = {
     res.redirect("/customer/address");
   },
   async restaurantsbyType(req, res) {
-    let commerceTypes = await CommerceType.findAll();
-    commerceTypes = commerceTypes.map((type) => type.dataValues);
-    let commerce = await Commerce.findAll({
+    const { id } = req.params;
+
+    let commerce = await User.findAll({
       where: {
-        commerceTypeId: req.params.id,
+        commerceType: id,
       },
     });
 
-    commerce = commerce.map((commerce) => commerce.dataValues);
+    commerce = commerce.map((data) => data.dataValues);
+    console.log(commerce);
     if (!commerce) {
       req.flash("error", "No restaurants found");
       return res.redirect("/customer");
     }
+
     res.render("customer/restaurantsbyType", {
-      commerceTypes,
       commerce,
       commerceCount: commerce.length,
       title: "Commerces - Gourmet Dinning",

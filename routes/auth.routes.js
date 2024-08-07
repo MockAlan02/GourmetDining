@@ -17,11 +17,13 @@ const {
   getactivationpage,
   resetPasswordToken,
   getnewPassword,
-  resetPassword
+  resetPassword,
+  logout
 } = require("../controllers/auth.controller");
 const router = require("./customer.routes");
 
 routes.get('/', getLogin);
+routes.get('/logout', logout);
 routes.get("/resetPassword/:token", getnewPassword);
 routes.post("/resetPassword", resetPasswordToken);
 routes.post("/newpasswordToken/:token", resetPassword);
