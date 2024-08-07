@@ -149,9 +149,9 @@ module.exports = {
 
   async getProfile(req, res) {
     try {
-      const commerce = await User.findByPk(req.session.userId);
+      const commerce = await User.findOne({ where: { id: req.session.user.id } });
       res.render("commerce/profileCommerce", {
-        commerce,
+        commerce : commerce.dataValues,
         title: "Mi Perfil - Gourmet Dinning",
         page: "commerce",
       });
@@ -163,22 +163,11 @@ module.exports = {
   async updateProfile(req, res) {
     try {
       const { openingTime, closingTime, phone, email } = req.body;
-      const commerce = await User.findByPk(req.session.userId);
+      const commerce = await User.findByPk(req.session.user.id);
 
       if (req.file) {
-        // Manejar la subida del logo
-        const logoPath = path.join(
-          __dirname,
-          "..",
-          "public",
-          "uploads",
-          req.file.filename
-        );
-        // Borrar el logo anterior si existe
-        if (commerce.picture) {
-          fs.unlinkSync(path.join(__dirname, "..", "public", commerce.picture));
-        }
-        commerce.picture = `/uploads/${req.file.filename}`;
+        const picture = req.file.path.replace(/^public/, "");
+        commerce.picture = picture;
       }
 
       commerce.openingTime = openingTime;
@@ -187,8 +176,9 @@ module.exports = {
       commerce.email = email;
 
       await commerce.save();
-      res.redirect("/commerce/home");
+      res.redirect("/commerce");
     } catch (error) {
+      console.error(error);
       res.status(500).send("Error al actualizar el perfil");
     }
   },
@@ -319,12 +309,18 @@ module.exports = {
     try {
       const { id } = req.params;
       const category = await Genre.findOne({ where: { id } });
-
+      const products = await Product.findAll({ where: { IdGenre: id } });
       if (!category) {
         req.flash("error", "Categoría no encontrada");
         return res.redirect("/categories");
       }
-
+      if (products.length > 0) {
+        await Promise.all(
+          products.map(async (product) => {
+            await product.destroy();
+          })
+        );
+      }
       await category.destroy();
       res.redirect("/commerce/categories");
     } catch (error) {
