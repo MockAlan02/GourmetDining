@@ -9,6 +9,8 @@ router.get('/restaurantsbyType', customerController.restaurantsbyType);
 router.get("/address", customerController.customeraddress);
 router.get("/form/newAdress", customerController.newaddress);
 router.post("/form/newAdress", customerController.createAddress);
+router.get("/form/editAdress/:id", customerController.geteditaddress);
+router.post("/form/editAdress/:id", customerController.editAddress);
 router.post("/delete/address/:id", customerController.deleteAddress);
 router.get('/restaurantsbyType/:id', customerController.restaurantsbyType);
 router.post('/filter', customerController.filter);

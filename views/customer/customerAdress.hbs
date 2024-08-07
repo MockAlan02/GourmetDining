@@ -1,7 +1,7 @@
 <section class="container mt-5 mb-5">
     <section class="addresses-header">
         <h1 class="h4 flex-grow-1">My Addresses</h1>
-        <a class="btn" href="customer/form/newAdress">
+        <a class="btn" href="/customer/form/newAdress">
             <i class="fas fa-plus"></i>
             Address
         </a>
@@ -19,7 +19,7 @@
                     </div>
                 </div>
                 <div>
-                    <a class="btn btn-secondary">Edit</a>
+                    <a href="/customer/form/editAdress/{{this.id}}" class="btn btn-secondary">Edit</a>
                     <form method="post" action="/customer/delete/address/{{this.id}}">
                         <button class="btn btn-danger">Delete</button>
                     </form>
