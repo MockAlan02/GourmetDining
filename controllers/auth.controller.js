@@ -56,23 +56,22 @@ async function postLogin(req, res) {
 }
 
 function getRegister(req, res) {
-  res.render("auth/registerCustumerDelivery"),
-    {
-      title: "Register - Gourmet Dinning",
-      page: "register",
-    };
+
+  res.render("auth/registerCustumerDelivery", {
+    title: "Register - Gourmet Dinning",
+    page: "register",
+  });
 }
 
 async function getRegisterCommerce(req, res) {
   let commerceTypes = await CommerceType.findAll();
   commerceTypes = commerceTypes.map((type) => type.dataValues);
+
   res.render("auth/registerCommerce", {
     commerceTypes,
-  }),
-    {
-      title: "Register - Gourmet Dinning",
-      page: "register",
-    };
+    title: "Register - Gourmet Dinning",
+    page: "register",
+  });
 }
 
 async function emailActivation(email, req) {
@@ -116,11 +115,11 @@ async function emailActivation(email, req) {
 }
 //Reset password page
 async function getResetPassword(req, res) {
-  res.render("auth/newPass"),
-    {
-      page: "newPass",
-      title: "Reset Password - Gourmet Dinning",
-    };
+  
+  res.render("auth/newPass", {
+    title: "Reset Password - Gourmet Dinning",
+    page: "login",
+  });
 }
 
 async function resetPasswordToken(req, res) {
@@ -132,7 +131,7 @@ async function resetPasswordToken(req, res) {
 
 //Reset password page
 async function getnewPassword(req, res) {
-  
+
   const token = await Token.findOne({ where: { token: req.params.token } });
   if (!token) {
     req.flash("error", "Token not found");
@@ -192,27 +191,28 @@ async function emailResetPassword(email, req) {
   if (!user) {
     req.flash("error", "User not found");
     res.render("auth/newPass"),
-      {
-        page: "newPass",
-        title: "Reset Password - Gourmet Dinning",
-      };
+    {
+      title: "Reset Password - Gourmet Dinning",
+      page: "newPass"
+    };
   }
   if (user.isVerified === false) {
     req.flash("error", "User not verified");
     res.render("auth/newPass"),
-      {
-        page: "newPass",
-        title: "Reset Password - Gourmet Dinning",
-      };
+    {
+      title: "Reset Password - Gourmet Dinning",
+      page: "newPass"
+      
+    };
   }
 
   if (user.role === "admin") {
     req.flash("error", "Admin cannot reset password");
     res.render("auth/newPass"),
-      {
-        page: "newPass",
-        title: "Reset Password - Gourmet Dinning",
-      };
+    {
+      title: "Reset Password - Gourmet Dinning",
+      page: "newPass"
+    };
   }
 
   const token = new Token({
@@ -322,7 +322,7 @@ async function postRegisterClientOrDelivery(req, res) {
 
   await user
     .save()
-    .then(async (result) => {})
+    .then(async (result) => { })
     .catch((err) => {
       console.log(err);
       req.flash("error", "Internal server error");
@@ -389,7 +389,7 @@ async function postRegisterCommerceCliente(req, res) {
 
   await user
     .save()
-    .then(async (result) => {})
+    .then(async (result) => { })
     .catch((err) => {
       console.log(err);
       req.flash("error", "Internal server error");

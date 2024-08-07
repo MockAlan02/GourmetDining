@@ -4,6 +4,7 @@ const customerController = require("../controllers/customer.controller");
 const favoriteController = require("../controllers/favorite.controller")
 
 router.get('/', customerController.index);
+// router.get('/profile', customerController.index);
 router.get('/restaurantsbyType', customerController.restaurantsbyType);
 router.get("/address", customerController.customeraddress);
 router.get("/form/newAdress", customerController.newaddress);

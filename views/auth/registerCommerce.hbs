@@ -6,16 +6,17 @@
                 <i class="fas fa-arrow-left"></i> Back
             </a>
         </div>
-        <form id="businessRegistrationForm" method="post" action="/login/registerCommerce" enctype="multipart/form-data">
+        <form id="businessRegistrationForm" method="post" action="/login/registerCommerce"
+            enctype="multipart/form-data">
             <legend class="mt-4">Business Details</legend>
             <div class="row">
-                 <div class="col-md-6 mb-3">
+                <div class="col-md-6 mb-3">
                     <label for="username" class="form-label">Business Name</label>
                     <input type="text" class="form-control" id="username" name="username" required>
                 </div>
                 <div class="col-md-6 mb-3">
                     <label for="businessPhone" class="form-label">Phone</label>
-                    <input type="tel" class="form-control" id="businessPhone" name="phone"  required>
+                    <input type="tel" class="form-control" id="businessPhone" name="phone" required>
                 </div>
             </div>
             <div class="row">
@@ -42,15 +43,15 @@
                 <label for="businessType" class="form-label">Business Type</label>
                 <select id="businessType" class="form-select" name="commerceType" required>
                     <option value="" selected disabled>Select Business Type</option>
-               {{#each commerceTypes}}
+                    {{#each commerceTypes}}
                     <option value="{{this.id}}">{{this.name}}</option>
-               {{/each}}
+                    {{/each}}
                 </select>
             </div>
 
             <legend class="mt-4">Account Details</legend>
             <div class="row">
-              
+
                 <div class="col-md-6 mb-3">
                     <label for="password" class="form-label">Password</label>
                     <input type="password" class="form-control" name="password" id="password" required>

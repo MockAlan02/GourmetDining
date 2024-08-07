@@ -3,8 +3,8 @@
         <div class="form__start">
             <h1>Register</h1>
             <a href="javascript:history.back()" class="btn btn-link">
-            <i class="fas fa-arrow-left"></i> Back
-        </a>
+                <i class="fas fa-arrow-left"></i> Back
+            </a>
         </div>
         <p class="legend">Personal Data</p>
         <div class="row mb-3">
@@ -33,7 +33,7 @@
         </div>
         <p class="legend">User Type</p>
         <div class="mb-3">
-            <label for="userType" class="form-label" >Select User Type</label>
+            <label for="userType" class="form-label">Select User Type</label>
             <select class="form-select" id="userType" name="role" required>
                 <option value="delivery">Delivery</option>
                 <option value="user">Customer</option>
@@ -49,11 +49,11 @@
         <div class="row mb-3">
             <div class="col-md-6">
                 <label for="newPassword" class="form-label">Password</label>
-                <input type="password" class="form-control" id="newPassword" name="password" required placeholder="your pass">
+                <input type="password" class="form-control" id="newPassword" name="password" required placeholder="Your pass">
             </div>
             <div class="col-md-6">
                 <label for="confirmPassword" class="form-label">Confirm Password</label>
-                <input type="password" class="form-control" id="confirmPassword" name="confirmPassword" required placeholder="your pass">
+                <input type="password" class="form-control" id="confirmPassword" name="confirmPassword" required placeholder="Your pass">
             </div>
         </div>
         <button type="submit" class="btn btn-primary w-100">Register</button>
@@ -61,8 +61,7 @@
 </section>
 
 <!-- Password Mismatch Modal -->
-<div class="modal fade" id="passwordMismatchModal" tabindex="-1" aria-labelledby="passwordMismatchModalLabel"
-    aria-hidden="true">
+<div class="modal fade" id="passwordMismatchModal" tabindex="-1" aria-labelledby="passwordMismatchModalLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
@@ -78,3 +77,48 @@
         </div>
     </div>
 </div>
+
+<!-- Registration Success Modal -->
+<div class="modal fade" id="registrationSuccessModal" tabindex="-1" aria-labelledby="registrationSuccessModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="registrationSuccessModalLabel">Registration Successful</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                We have sent you a verification email. Please check your Gmail to verify your account and start using our services!
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" id="goToGmailBtn">Go to Gmail</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    document.getElementById('registerForm').addEventListener('submit', function(event) {
+        event.preventDefault();
+        const password = document.getElementById('newPassword').value;
+        const confirmPassword = document.getElementById('confirmPassword').value;
+
+        if (password !== confirmPassword) {
+            const passwordMismatchModal = new bootstrap.Modal(document.getElementById('passwordMismatchModal'));
+            passwordMismatchModal.show();
+        } else {
+            const registrationSuccessModal = new bootstrap.Modal(document.getElementById('registrationSuccessModal'));
+            registrationSuccessModal.show();
+
+            // Simulate form submission
+            setTimeout(function() {
+                document.getElementById('registerForm').submit();
+            }, 1000);
+
+            document.getElementById('goToGmailBtn').addEventListener('click', function() {
+                window.open('https://mail.google.com', '_blank');
+            });
+        }
+    });
+</script>
+
+

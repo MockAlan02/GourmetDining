@@ -201,10 +201,11 @@ module.exports = {
           };
         })
       );
+      
       res.render("commerce/categoriesList", {
         categories: categoriesWithCount,
-        title: "Mantenimiento de Categorías - Gourmet Dinning",
-        page: "categories",
+        title: "Commerce - Gourmet Dinning",
+        page: "commerce",
       });
     } catch (error) {
       res.status(500).send("Error al obtener las categorías");
@@ -213,8 +214,8 @@ module.exports = {
   //ok
   async createCategoryForm(req, res) {
     res.render("commerce/createCategorie", {
-      title: "Crear Categoría - Gourmet Dinning",
-      page: "categories",
+      title: "Commerce - Gourmet Dinning",
+      page: "commerce",
     });
   },
   //ok
@@ -244,11 +245,10 @@ module.exports = {
     try {
       const { id } = req.params;
       let category = await Genre.findOne({ where: { id } });
-
       res.render("commerce/editCategory", {
         category: category.dataValues,
-        title: "Editar Categoría - Gourmet Dinning",
-        page: "categories",
+        title: "Commerce - Gourmet Dinning",
+        page: "commerce",
       });
     } catch (error) {
       res.status(500).send("Error al obtener la categoría");
@@ -344,11 +344,10 @@ module.exports = {
         return { ...product.dataValues, genre: genre.dataValues.name };
       })
     );
-
     res.render("commerce/productsList", {
       products: productsWithGenre,
-      title: "Mantenimiento de Productos - Gourmet Dinning",
-      page: "products",
+      title: "Commerce - Gourmet Dinning",
+      page: "commerce",
     });
   },
 
@@ -358,8 +357,8 @@ module.exports = {
       genreProduct = genreProduct.map((genre) => genre.dataValues);
       res.render("commerce/createProduct", {
         genreProduct,
-        title: "Crear Producto - Gourmet Dinning",
-        page: "products",
+        title: "Commerce - Gourmet Dinning",
+        page: "commerce",
       });
     } catch (error) {
       res.status(500).send("Error al obtener las categorías");

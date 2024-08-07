@@ -1,47 +1,45 @@
- <div class="container">
-        <h1>Categories</h1>
-        <a href="#" class="btn btn-primary btn-create">Create new category</a>
-        <table class="table">
-            <thead>
-                <tr>
-                    <th>Name</th>
-                    <th>Description</th>
-                    <th>Products count</th>
-                    <th>Actions</th>
-                </tr>
-            </thead>
-            <tbody>
-                {{#if categories}}
-                    {{#each categories}}
-                        <tr>
-                            <td>{{this.name}}</td>
-                            <td>{{this.description}}</td>
-                            <td>{{this.productCount}}</td>
-                            <td class="table-actions">
-                                <a href="/commerce/categories/edit/{{this.id}}" class="btn btn-info">Edit</a>
-                                <a href="/commerce/categories/delete/{{this.id}}" class="btn btn-danger">Delete</a>
-                            </td>
-                        </tr>
-                    {{/each}}
-                {{else}}
-                    <tr>
-                        <td colspan="4">No categories found</td>
-                    </tr>
-                {{/if}}
-            </tbody>
-        </table>
+<section class="container" style="min-height: 100dvh;">
+    <div class="d-flex justify-content-between align-items-center mb-4 mt-5">
+        <h1 class="mb-0">Categories</h1>
+        <a href="/commerce/categories/create" class="btn btn-create">Create new category</a>
     </div>
+    <table class="table table-hover table-striped table-bordered">
+        <thead class="table-dark">
+            <tr>
+                <th>Name</th>
+                <th>Description</th>
+                <th>Products count</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {{#if categories}}
+            {{#each categories}}
+            <tr>
+                <td>{{this.name}}</td>
+                <td>{{this.description}}</td>
+                <td>{{this.productCount}}</td>
+                <td class="table-actions">
+                    <a href="/commerce/categories/edit/{{this.id}}" class="btn btn-secondary">Edit</a>
+                    <a href="/commerce/categories/delete/{{this.id}}" class="btn btn-danger">Delete</a>
+                </td>
+            </tr>
+            {{/each}}
+            {{else}}
+            <tr>
+                <td colspan="4">No categories found</td>
+            </tr>
+            {{/if}}
+        </tbody>
+    </table>
+</section>
 
- <style>
-        /* Custom styles for page */
-        .container {
-            max-width: 800px;
-            margin: 20px auto;
-        }
-        .btn-create {
-            margin-bottom: 20px;
-        }
-        .table-actions a {
-            margin-right: 10px;
-        }
-    </style>
+<style>
+    .table-actions a {
+        margin-right: 5px;
+    }
+
+    .btn-create {
+        white-space: nowrap;
+    }
+</style>
