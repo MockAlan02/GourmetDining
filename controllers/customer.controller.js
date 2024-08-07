@@ -41,14 +41,14 @@ module.exports = {
 
     if (response) {
       req.flash("success", "Address added successfully");
-      return res.redirect("/customer");
+      return res.redirect("/customer/address");
     }
 
     req.flash("error", "Error adding address");
     res.redirect("/customer/form/adress");
   },
 
-  async customeraddress (req, res) {
+  async customeraddress(req, res) {
     let address = await Direccion.findAll({
       where: {
         IdUser: req.session.user.id,
@@ -59,24 +59,40 @@ module.exports = {
       address,
       title: "Address - Gourmet Dinning",
       page: "customeraddress",
-    });},
+    });
+  },
 
-  async restaurantsbyType(req, res) {
-    let commerceTypes = await CommerceType.findAll();
-    commerceTypes = commerceTypes.map((type) => type.dataValues);
-    let commerce = await Commerce.findAll({
+  async deleteAddress(req, res) {
+    const { id } = req.params;
+    const response = await Direccion.destroy({
       where: {
-        commerceTypeId: req.params.id,
+        id: id,
+      },
+    });
+    req.flash(
+      response
+        ? ("success", "Address deleted successfully")
+        : ("error", "Error deleting address")
+    );
+    res.redirect("/customer/address");
+  },
+  async restaurantsbyType(req, res) {
+    const { id } = req.params;
+
+    let commerce = await User.findAll({
+      where: {
+        commerceType: id,
       },
     });
 
-    commerce = commerce.map((commerce) => commerce.dataValues);
+    commerce = commerce.map((data) => data.dataValues);
+    console.log(commerce);
     if (!commerce) {
       req.flash("error", "No restaurants found");
       return res.redirect("/customer");
     }
+
     res.render("customer/restaurantsbyType", {
-      commerceTypes,
       commerce,
       commerceCount: commerce.length,
       title: "Commerces - Gourmet Dinning",
@@ -106,21 +122,6 @@ module.exports = {
       title: "Commerces - Gourmet Dinning",
     });
   },
-
-  async favorite(req, res) {
-    const response = await Favorite.create({
-      IdUser: req.session.user.id,
-      IdCommerce: req.params.id,
-    });
-
-    if (response) {
-      req.flash("success", "Commerce added to favorites");
-      return res.redirect("/customer");
-    }
-    req.flash("error", "Error adding commerce to favorites");
-    res.redirect("/customer");
-  },
-
   async commerceDetails(req, res) {
     let commerce = await Commerce.findOne({
       where: {

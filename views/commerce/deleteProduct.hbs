@@ -1,0 +1,32 @@
+<div class="container">
+    <div class="form-container mt-5">
+      <h1>Delete product</h1>
+      <p>Are you sure you want to delete "{{product.name}}"?</p>
+      <form action="/commerce/products/delete/{{product.id}}" method="POST">
+        <button type="submit" class="btn btn-danger">Delete</button>
+        <a href="/commerce/products" class="btn btn-secondary">Cancel</a>
+      </form>
+    </div>
+  </div>
+
+
+
+
+    <style>
+  .form-container {
+    max-width: 500px;
+    margin: auto;
+    padding: 20px;
+    background-color: #f7f7f7;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  }
+  .form-container h1 {
+    margin-bottom: 20px;
+  }
+  .form-container p {
+    margin-bottom: 20px;
+  }
+  .form-container .btn {
+    margin-top: 10px;
+  }

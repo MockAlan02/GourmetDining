@@ -40,11 +40,11 @@ const User = connection.define("User", {
         allowNull: false,
     },
     openingTime : {
-        type: sequelize.DATE,
+        type: sequelize.TIME,
         allowNull: true,
     },
     closingTime : {
-        type: sequelize.DATE,
+        type: sequelize.TIME,
         allowNull: true,
     },
     commerceType : {

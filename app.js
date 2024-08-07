@@ -1,5 +1,4 @@
 require("dotenv").config();
-
 const express = require("express");
 const path = require("path");
 const app = express();
@@ -9,14 +8,13 @@ const flash = require("connect-flash");
 const session = require("express-session");
 const multer = require("multer");
 const { v4: uuidv4 } = require("uuid");
-
+const { authorizeRole, isAuth, isNotAuth } = require("./middlewares/is-auth");
 
 const port = process.env.PORT || 3000;
 
+const hbs = require("handlebars");
 
-const hbs = require('handlebars');
-
-hbs.registerHelper('ifEquals', function(arg1, arg2, options) {
+hbs.registerHelper("ifEquals", function (arg1, arg2, options) {
   if (Array.isArray(arg2)) {
     if (arg2.includes(arg1)) {
       return options.fn(this);
@@ -28,7 +26,6 @@ hbs.registerHelper('ifEquals', function(arg1, arg2, options) {
   }
   return options.inverse(this);
 });
-
 
 app.engine(
   "hbs",
@@ -43,9 +40,9 @@ app.engine(
             return options.fn(this);
           }
         } else {
-          return (arg1 === arg2) ? options.fn(this) : options.inverse(this);
+          return arg1 === arg2 ? options.fn(this) : options.inverse(this);
         }
-      }
+      },
     },
     partialsDir: [
       path.join(__dirname, "views/partials/"),
@@ -54,7 +51,7 @@ app.engine(
       path.join(__dirname, "views/commerce/"),
       path.join(__dirname, "views/customer/"),
       path.join(__dirname, "views/delivery/"),
-      path.join(__dirname, "views/admin/")
+      path.join(__dirname, "views/admin/"),
     ],
   })
 );
@@ -107,13 +104,22 @@ app.use((req, res, next) => {
 const customerRoutes = require("./routes/customer.routes");
 const authRoutes = require("./routes/auth.routes");
 const deliveryRoutes = require("./routes/delivery.routes");
+const adminRoutes = require("./routes/admin.routes");
+const commerceRoutes = require("./routes/commerce.routes");
+const { FORCE } = require("sequelize/lib/index-hints");
 
-app.use("/customer", customerRoutes);
-app.use("/login", authRoutes);
+
+// Rutas públicas
 app.use("/", authRoutes);
-// app.use("/commerce", commerceRoutes);
-app.use("/delivery", deliveryRoutes);
-// app.use("/admin", adminRoutes);
+app.use("/login", authRoutes);
+
+
+// Rutas protegidas
+app.use("/customer", isAuth, authorizeRole("user"), customerRoutes);
+app.use("/commerce",isAuth, commerceRoutes);
+app.use("/delivery", isAuth, authorizeRole("delivery"), deliveryRoutes);
+app.use("/admin", isAuth, authorizeRole("admin"), adminRoutes);
+
 
 // Manejo de errores 404
 app.use((req, res, next) => {
@@ -122,7 +128,7 @@ app.use((req, res, next) => {
 
 // Conectar a la base de datos y arrancar el servidor
 connection
-  .sync({ force: false })
+  .sync({ alter: false })
   .then((result) => {
     app.listen(port, () => {
       console.log(`Server running on http://localhost:${port}`);

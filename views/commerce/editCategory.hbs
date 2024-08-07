@@ -1,0 +1,38 @@
+<div class="container">
+  <h1>Edit Category</h1>
+  <form action="/commerce/categories/edit/{{category.id}}" method="POST">
+    <div class="form-group">
+      <label for="name">Name</label>
+      <input
+        type="text"
+        name="name"
+        id="name"
+        class="form-control"
+        value="{{category.name}}"
+        required
+      />
+    </div>
+    <div class="form-group">
+      <label for="description">Description</label>
+      <textarea
+        name="description"
+        id="description"
+        class="form-control"
+        rows="4"
+        required
+      >{{category.description}}</textarea>
+    </div>
+    <div class="btn-container">
+      <button type="submit" class="btn btn-primary">Save changes</button>
+      <a href="/commerce/categories" class="btn btn-secondary">Go back</a>
+    </div>
+  </form>
+</div>
+
+<style>
+  /* Custom styles for form */ .container { max-width: 500px; margin: 20px auto;
+  padding: 20px; border: 1px solid #ccc; border-radius: 8px; background-color:
+  #f9f9f9; } .form-group { margin-bottom: 20px; } .form-group label {
+  font-weight: bold; } .form-group textarea.form-control { resize: vertical; }
+  .btn-container { margin-top: 10px; }
+</style>

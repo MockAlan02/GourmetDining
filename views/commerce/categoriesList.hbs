@@ -1,0 +1,47 @@
+ <div class="container">
+        <h1>Categories</h1>
+        <a href="#" class="btn btn-primary btn-create">Create new category</a>
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Description</th>
+                    <th>Products count</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {{#if categories}}
+                    {{#each categories}}
+                        <tr>
+                            <td>{{this.name}}</td>
+                            <td>{{this.description}}</td>
+                            <td>{{this.productCount}}</td>
+                            <td class="table-actions">
+                                <a href="/commerce/categories/edit/{{this.id}}" class="btn btn-info">Edit</a>
+                                <a href="/commerce/categories/delete/{{this.id}}" class="btn btn-danger">Delete</a>
+                            </td>
+                        </tr>
+                    {{/each}}
+                {{else}}
+                    <tr>
+                        <td colspan="4">No categories found</td>
+                    </tr>
+                {{/if}}
+            </tbody>
+        </table>
+    </div>
+
+ <style>
+        /* Custom styles for page */
+        .container {
+            max-width: 800px;
+            margin: 20px auto;
+        }
+        .btn-create {
+            margin-bottom: 20px;
+        }
+        .table-actions a {
+            margin-right: 10px;
+        }
+    </style>
