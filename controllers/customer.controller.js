@@ -73,10 +73,9 @@ module.exports = {
     });
   },
 
-
-async editAddress(req, res) {
+  async editAddress(req, res) {
     const { id } = req.params;
-    const {name, address} = req.body;
+    const { name, address } = req.body;
     const direction = await Direccion.findOne({
       where: {
         id,
@@ -92,7 +91,6 @@ async editAddress(req, res) {
     await direction.save();
     req.flash("success", "Address updated successfully");
     res.redirect("/customer/address");
-  
   },
 
   async deleteAddress(req, res) {
@@ -112,25 +110,38 @@ async editAddress(req, res) {
   async restaurantsbyType(req, res) {
     const { id } = req.params;
 
-    let commerce = await User.findAll({
-      where: {
-        commerceType: id,
-      },
-    });
-
-    commerce = commerce.map((data) => data.dataValues);
-    console.log(commerce);
-    if (!commerce) {
-      req.flash("error", "No restaurants found");
+    // Verifica que el id sea un número, si la columna commerceType es un entero
+    if (isNaN(id)) {
+      req.flash("error", "Invalid commerce type ID");
       return res.redirect("/customer");
     }
 
-    res.render("customer/restaurantsbyType", {
-      commerce,
-      commerceCount: commerce.length,
-      title: "Commerces - Gourmet Dinning",
-      page: "restaurantsbyType",
-    });
+    let commerce;
+    try {
+      commerce = await User.findAll({
+        where: {
+          commerceType: id,
+        },
+      });
+
+      commerce = commerce.map((data) => data.dataValues);
+
+      if (commerce.length === 0) {
+        req.flash("error", "No restaurants found");
+        return res.redirect("/customer");
+      }
+
+      res.render("customer/restaurantsbyType", {
+        commerce,
+        commerceCount: commerce.length,
+        title: "Commerces - Gourmet Dinning",
+        page: "restaurantsbyType",
+      });
+    } catch (error) {
+      console.error(error);
+      req.flash("error", "An error occurred while fetching restaurants");
+      res.redirect("/customer");
+    }
   },
 
   async filter(req, res) {

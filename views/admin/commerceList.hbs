@@ -13,10 +13,10 @@
     </tr>
   </thead>
   <tbody>
-    {{#each commerces}}
+    {{#each commerce}}
     <tr>
-      <td>{{this.name}}</td>
-      <td><img src="{{this.logo}}" alt="Logo" width="50"></td>
+      <td>{{this.username}}</td>
+      <td><img src="{{this.picture}}" alt="Logo" width="50"></td>
       <td>{{this.orderCount}}</td>
       <td>{{this.phone}}</td>
       <td>{{this.openingTime}}</td>
@@ -24,11 +24,11 @@
       <td>{{this.email}}</td>
       <td>
         {{#if this.isActive}}
-        <form action="/admin/commerces/{{this.id}}/toggle" method="POST">
+        <form action="/admin/commerces/toggle/{{this.id}}" method="POST">
           <button type="submit" class="btn btn-danger">Inactivate</button>
         </form>
         {{else}}
-        <form action="/admin/commerces/{{this.id}}/toggle" method="POST">
+        <form action="/admin/commerces/toggle/{{this.id}}" method="POST">
           <button type="submit" class="btn btn-success">Activate</button>
         </form>
         {{/if}}

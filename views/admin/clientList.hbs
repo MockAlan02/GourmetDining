@@ -13,24 +13,20 @@
   <tbody>
     {{#each clients}}
     <tr>
-      <td>{{this.firstName}}</td>
+      <td>{{this.name}}</td>
       <td>{{this.lastName}}</td>
       <td>
-        {{#if this.orders.length}}
-          {{this.orders.length}}
-        {{else}}
-          0
-        {{/if}}
+          {{this.orderCount}}
       </td>
       <td>{{this.phone}}</td>
       <td>{{this.email}}</td>
       <td>
         {{#if this.isActive}}
-        <form action="/admin/clients/{{this.id}}/toggle" method="POST">
+        <form action="/admin/clients/status/{{this.id}}" method="POST">
           <button type="submit" class="btn btn-danger">Inactivate</button>
         </form>
         {{else}}
-        <form action="/admin/clients/{{this.id}}/toggle" method="POST">
+        <form action="/admin/clients/status/{{this.id}}"  method="POST">
           <button type="submit" class="btn btn-success">Activate</button>
         </form>
         {{/if}}

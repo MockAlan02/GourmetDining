@@ -1,9 +1,13 @@
 <section class="container search-section mt-3">
   <div class="search-bar">
-    <input type="text" class="form-control" placeholder="Search..." />
+
+   <form method="get">
+     <input type="text" class="form-control" placeholder="Search..." />
     <button class="btn btn-primary">Search</button>
+   </form>
+
   </div>
-  <p class="text-left mt-1" style="margin-left: 10px;"><strong>180 restaurants</strong></p>
+  <p class="text-left mt-1" style="margin-left: 10px;"><strong>{{commerce.length}} restaurants</strong></p>
 </section>
 
 <section class="container mt-3 mb-5">
@@ -12,14 +16,17 @@
     {{#each commerce}}
       <div class="col">
         <a href="/customer/commerceDetails/{{this.id}}" class="card__commerce-type">
-          <div class="like__space-commerce" ></div>
+          <div class="like__space-commerce" style="background-image: url('{{this.picture}}');"></div>
+          </a>
           <div class="card__commerce-type-body mt-1 mb-3">
             <button class="btn btn-heart" onclick="handleClick(event)"><i class="fas fa-heart"></i></button>
             <a href="#" class="card-link" onclick="event.preventDefault();">
+             <a href="/customer/commerceDetails/{{this.id}}" class="card__commerce-type">
               <h3 class="card-title">{{this.username}}</h3>
+              </a>
             </a>
           </div>
-        </a>
+      
       </div>
     {{/each}}
   </div>

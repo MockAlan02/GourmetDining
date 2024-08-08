@@ -21,7 +21,7 @@ const User = connection.define("User", {
     },
     phone : {
         type: sequelize.STRING,
-        allowNull: false,
+        allowNull: true,
     },
     password: {
         type: sequelize.STRING,
@@ -29,7 +29,7 @@ const User = connection.define("User", {
     },
     picture: {
         type: sequelize.STRING,
-        allowNull: false,
+        allowNull: true,
     },
     username: {
         type: sequelize.STRING,
@@ -55,6 +55,10 @@ const User = connection.define("User", {
         type: sequelize.BOOLEAN,
         defaultValue: false,
         allowNull: false,
+    },
+    cedula : {
+        type: sequelize.STRING,
+        allowNull: true,
     },
     });
 

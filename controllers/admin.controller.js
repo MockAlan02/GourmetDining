@@ -1,44 +1,92 @@
 const CommerceType = require("../models/commerceType");
 const Commerce = require("../models/user");
 const User = require("../models/user");
-const Favorite = require("../models/favorite");
-const Genre = require("../models/genre");
-const Product = require("../models/product");
-const OrderProduct = require("../models/orderProduct");
-const Direccion = require("../models/direction");
 const TaxConfiguration = require("../models/taxConfiguration");
 const Order = require("../models/orders");
-
+const Product = require("../models/product");
+const bcrypt = require("bcryptjs");
 module.exports = {
   // Dashboard
   async index(req, res) {
+    const inativeCommerces = await Commerce.findAll({
+      where: {
+        isActive: false,
+      },
+    });
+    const inativeDeliveries = await User.findAll({
+      where: {
+        role: "delivery",
+        isActive: false,
+      },
+    });
+    const inativeClients = await User.findAll({
+      where: {
+        role: "user",
+        isActive: false,
+      },
+    });
+    const activeCommerces = await Commerce.findAll({
+      where: {
+        isActive: true,
+      },
+    });
+    const activeDeliveries = await User.findAll({
+      where: {
+        role: "delivery",
+        isActive: true,
+      },
+    });
+    const activeClients = await User.findAll({
+      where: {
+        role: "user",
+        isActive: true,
+      },
+    });
+
+    const products = await Product.findAll();
+    const orders = await Order.findAll();
     res.render("admin/adminHome", {
+      inativeCommerces: inativeCommerces.length,
+      inativeDeliveries: inativeDeliveries.length,
+      inativeClients: inativeClients.length,
+      activeCommerces: activeCommerces.length,
+      activeDeliveries: activeDeliveries.length,
+      activeClients: activeClients.length,
+      products: products.length,
+      orders: orders.length,
       title: "Dashboard - Admin",
       page: "admin",
     });
   },
 
   // Listado de Clientes
-    async listClients(req, res) {
-      try {
-        let users = await User.findAll({
-          include: [{
-            model: Order,
-            as: 'orders',
-          }],
-        });
-        users = users.map(user => ({
-          ...user.dataValues,
-          orderCount: user.orders.length,
-        }));
-        
-        res.render('admin/listClients', { clients: users });
-      } catch (error) {
-        console.error('Error listing clients:', error);
-        res.status(500).send('Internal Server Error');
-      }
-    },
-  
+  async listClients(req, res) {
+    try {
+      let users = await User.findAll({
+        where: {
+          role: "user",
+        },
+      });
+
+      // Mapear y agregar conteo de órdenes para cada usuario
+      users = await Promise.all(
+        users.map(async (user) => {
+          let orders = await Order.findAll({
+            where: { IdUser: user.id },
+          });
+          return {
+            ...user.dataValues,
+            orderCount: orders.length,
+          };
+        })
+      );
+
+      res.render("admin/clientList", { clients: users });
+    } catch (error) {
+      console.error("Error listing clients:", error);
+      res.status(500).send("Internal Server Error");
+    }
+  },
 
   // Activar/Desactivar Cliente
   async toggleClientStatus(req, res) {
@@ -54,7 +102,10 @@ module.exports = {
       client.isActive = !client.isActive;
       await client.save();
 
-      req.flash("success", `Client ${client.isActive ? 'activated' : 'deactivated'} successfully`);
+      req.flash(
+        "success",
+        `Client ${client.isActive ? "activated" : "deactivated"} successfully`
+      );
       res.redirect("/admin/clients");
     } catch (error) {
       console.error("Error toggling client status:", error);
@@ -63,83 +114,62 @@ module.exports = {
   },
 
   // Listado de Deliveries
-    async listDeliveries(req, res) {
-      try {
-        let deliveries = await Delivery.findAll({
-          include: [{
-            model: Order,
-            as: 'orders',
-          }],
-        });
-        deliveries = deliveries.map(delivery => ({
-          ...delivery.dataValues,
-          orderCount: delivery.orders.length, 
-        }));
-        
-        res.render('admin/listDeliveries', { deliveries: deliveries });
-      } catch (error) {
-        console.error('Error listing deliveries:', error);
-        res.status(500).send('Internal Server Error');
-      }
-    },
-  
-  async toggleDeliveryStatus(req, res) {
+  async listDeliveries(req, res) {
     try {
-      const { id } = req.params;
-      const delivery = await User.findByPk(id);
+      let users = await User.findAll({
+        where: {
+          role: "delivery",
+        },
+      });
 
-      if (!delivery) {
-        req.flash("error", "Delivery not found");
-        return res.redirect("/admin/deliveries");
-      }
+      // Mapear y agregar conteo de órdenes para cada usuario
+      users = await Promise.all(
+        users.map(async (user) => {
+          let orders = await Order.findAll({
+            where: { IdUser: user.id },
+          });
+          return {
+            ...user.dataValues,
+            orderCount: orders.length,
+          };
+        })
+      );
 
-      delivery.isActive = !delivery.isActive;
-      await delivery.save();
-
-      req.flash("success", `Delivery ${delivery.isActive ? 'activated' : 'deactivated'} successfully`);
-      res.redirect("/admin/deliveries");
+      res.render("admin/clientList", { clients: users });
     } catch (error) {
-      console.error("Error toggling delivery status:", error);
+      console.error("Error listing clients:", error);
       res.status(500).send("Internal Server Error");
     }
   },
 
-  // Listado de Comercios
-    async listCommerces(req, res) {
-      try {
-        let commerces = await Commerce.findAll({
-          include: [{
-            model: Order,
-            as: 'orders',
-          }],
-        });
-          commerces = commerces.map(commerce => ({
-          ...commerce.dataValues,
-          orderCount: commerce.orders.reduce((sum, order) => sum + order.orderCount, 0), 
-        }));
-  
-        res.render('admin/listCommerces', { commerces: commerces });
-      } catch (error) {
-        console.error('Error listing commerces:', error);
-        res.status(500).send('Internal Server Error');
-      }
-    },
-
-  // Activar/Desactivar Comercio
-  async toggleCommerceStatus(req, res) {
+  async toggleInactiveOrActiveUser(req, res) {
     try {
       const { id } = req.params;
-      const commerce = await Commerce.findByPk(id);
-
-      if (!commerce) {
-        req.flash("error", "Commerce not found");
-        return res.redirect("/admin/commerces");
-      }
-
+      const user = await User.findByPk(id);
+      user.isActive = !user.isActive;
+      await user.save();
+      req.flash(
+        "success",
+        `User ${user.isActive ? "activated" : "deactivated"} successfully`
+      );
+      res.redirect("/admin/clients");
+    } catch (error) {
+      console.error("Error toggling user status:", error);
+      res.status(500).send("Internal Server Error");
+    }
+  },
+  async toggleInactiveOrActiveCommerce(req, res) {
+    try {
+      const { id } = req.params;
+      const commerce = await User.findByPk(id);
       commerce.isActive = !commerce.isActive;
       await commerce.save();
-
-      req.flash("success", `Commerce ${commerce.isActive ? 'activated' : 'deactivated'} successfully`);
+      req.flash(
+        "success",
+        `Commerce ${
+          commerce.isActive ? "activated" : "deactivated"
+        } successfully`
+      );
       res.redirect("/admin/commerces");
     } catch (error) {
       console.error("Error toggling commerce status:", error);
@@ -147,20 +177,49 @@ module.exports = {
     }
   },
 
-  // Mantenimiento de Configuración
-  async configMaintenance(req, res) {
+  async toggleInactiveOrActiveDelivery(req, res) {
     try {
-      let taxConfig = await TaxConfiguration.findOne();
-      if (!taxConfig) {
-        taxConfig = {};
-      }
-      res.render("admin/configMaintenance", {
-        taxConfig,
-        title: "Mantenimiento de Configuración - Admin",
-        page: "configMaintenance"
-      });
+      const { id } = req.params;
+      const delivery = await User.findByPk(id);
+      delivery.isActive = !delivery.isActive;
+      await delivery.save();
+      req.flash(
+        "success",
+        `Delivery ${
+          delivery.isActive ? "activated" : "deactivated"
+        } successfully`
+      );
+      res.redirect("/admin/deliveries");
     } catch (error) {
-      console.error("Error fetching configuration:", error);
+      console.error("Error toggling delivery status:", error);
+      res.status(500).send("Internal Server Error");
+    }
+  },
+  // Listado de Comercios
+  async listCommerces(req, res) {
+    try {
+      let users = await User.findAll({
+        where: {
+          role: "commerce",
+        },
+      });
+
+      // Mapear y agregar conteo de órdenes para cada usuario
+      users = await Promise.all(
+        users.map(async (user) => {
+          let orders = await Order.findAll({
+            where: { IdCommerce: user.id },
+          });
+          return {
+            ...user.dataValues,
+            orderCount: orders.length,
+          };
+        })
+      );
+
+      res.render("admin/commerceList", { commerce: users });
+    } catch (error) {
+      console.error("Error listing clients:", error);
       res.status(500).send("Internal Server Error");
     }
   },
@@ -168,14 +227,16 @@ module.exports = {
   // Editar Configuración
   async editConfig(req, res) {
     try {
-      let taxConfig = await TaxConfiguration.findOne();
+      const { id } = req.params;
+      let taxConfig = await TaxConfiguration.findOne({ where: { id } });
       if (!taxConfig) {
         taxConfig = {};
       }
-      res.render("admin/configEdit", {
+      taxConfig = taxConfig.dataValues;
+      res.render("admin/editConfiguration", {
         taxConfig,
         title: "Editar Configuración - Admin",
-        page: "configEdit"
+        page: "configEdit",
       });
     } catch (error) {
       console.error("Error fetching configuration for edit:", error);
@@ -186,15 +247,13 @@ module.exports = {
   // Guardar Configuración
   async saveConfig(req, res) {
     try {
+      const id = req.params.id;
+
+      let taxConfig = await TaxConfiguration.findOne({ where: { id } });
       const { itbis } = req.body;
-      let taxConfig = await TaxConfiguration.findOne();
 
-      if (!taxConfig) {
-        taxConfig = await TaxConfiguration.create({ tax: itbis });
-      } else {
-        await taxConfig.update({ tax: itbis });
-      }
-
+      taxConfig.tax = itbis;
+      await taxConfig.save();
       req.flash("success", "Configuration updated successfully");
       res.redirect("/admin/config-maintenance");
     } catch (error) {
@@ -206,43 +265,42 @@ module.exports = {
   // Listado de Administradores
   async listAdmins(req, res) {
     try {
-      let admins = await User.findAll({ where: { role: 'admin' } });
+      let admins = await User.findAll({ where: { role: "admin" } });
 
-      admins = admins.map(admin => ({
-        id: admin.id,
-        firstName: admin.firstName,
-        lastName: admin.lastName,
-        username: admin.username,
-        cedula: admin.cedula,
-        email: admin.email,
-        isActive: admin.isActive
-      }));
-
-      res.render("admin/adminsList", {
+      admins = admins.map((admin) => admin.dataValues);
+      admins = admins.filter((x) => x.id !== req.session.user.id);
+      res.render("admin/adminList", {
         admins,
         title: "Listado de Administradores - Admin",
-        page: "admins"
+        page: "admins",
       });
     } catch (error) {
       console.error("Error listing admins:", error);
       res.status(500).send("Internal Server Error");
     }
   },
-
+  getCreateAdmin(req, res) {
+    res.render("admin/adminForm", {
+      title: "Crear Administrador - Admin",
+      page: "adminCreate",
+    });
+  },
   // Crear Administrador
   async createAdmin(req, res) {
     try {
-      const { firstName, lastName, username, cedula, email, password } = req.body;
-      const hashedPassword = await bcrypt.hash(password, 10);
+      const { firstName, lastName, username, cedula, email, password } =
+        req.body;
+      const hashedPassword = bcrypt.hashSync(password, 12);
 
       await User.create({
-        firstName,
+        name: firstName,
         lastName,
         username,
         cedula,
         email,
+        isActive: true,
         password: hashedPassword,
-        role: 'admin'
+        role: "admin",
       });
 
       req.flash("success", "Administrator created successfully");
@@ -257,17 +315,18 @@ module.exports = {
   async editAdmin(req, res) {
     try {
       const { id } = req.params;
-      const admin = await User.findByPk(id);
+      let admin = await User.findOne({ where: { id } });
 
       if (!admin) {
         req.flash("error", "Administrator not found");
         return res.redirect("/admin/admins");
       }
+      admin = admin.dataValues;
 
       res.render("admin/adminForm", {
         admin,
         title: "Editar Administrador - Admin",
-        page: "adminEdit"
+        page: "adminEdit",
       });
     } catch (error) {
       console.error("Error fetching admin for edit:", error);
@@ -279,14 +338,22 @@ module.exports = {
   async saveAdmin(req, res) {
     try {
       const { id } = req.params;
-      const { firstName, lastName, username, cedula, email, password, confirmPassword } = req.body;
+      const {
+        firstName,
+        lastName,
+        username,
+        cedula,
+        email,
+        password,
+        confirmPassword,
+      } = req.body;
 
       if (password !== confirmPassword) {
         req.flash("error", "Passwords do not match");
-        return res.redirect(`/admin/admins/${id}/edit`);
+        return res.redirect(`/admin/edit/${id}`);
       }
 
-      const hashedPassword = password ? await bcrypt.hash(password, 10) : undefined;
+      const hashedPassword = bcrypt.hashSync(password, 12);
       const admin = await User.findByPk(id);
 
       if (!admin) {
@@ -295,12 +362,12 @@ module.exports = {
       }
 
       await admin.update({
-        firstName,
+        name: firstName,
         lastName,
         username,
         cedula,
         email,
-        password: hashedPassword || admin.password
+        password: hashedPassword || admin.password,
       });
 
       req.flash("success", "Administrator updated successfully");
@@ -328,6 +395,40 @@ module.exports = {
       res.redirect("/admin/admins");
     } catch (error) {
       console.error("Error deleting admin:", error);
+      res.status(500).send("Internal Server Error");
+    }
+  },
+
+  async configMaintenance(req, res) {
+    try {
+      let taxConfig = await TaxConfiguration.findAll();
+      if (!taxConfig) {
+        taxConfig = {};
+      }
+      taxConfig = taxConfig.map((x) => x.dataValues);
+      res.render("admin/configuration", {
+        taxConfig : taxConfig[0],
+        title: "Configuración de Impuestos - Admin",
+        page: "config",
+      });
+    } catch (error) {
+      console.error("Error fetching configuration for maintenance:", error);
+      res.status(500).send("Internal Server Error");
+    }
+  },
+  async toggleInactiveOrActiveAdmin(req, res) {
+    try {
+      const { id } = req.params;
+      const admin = await User.findByPk(id);
+      admin.isActive = !admin.isActive;
+      await admin.save();
+      req.flash(
+        "success",
+        `Admin ${admin.isActive ? "activated" : "deactivated"} successfully`
+      );
+      res.redirect("/admin/admins");
+    } catch (error) {
+      console.error("Error toggling admin status:", error);
       res.status(500).send("Internal Server Error");
     }
   }
